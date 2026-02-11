@@ -1,9 +1,13 @@
 const { expect } = require('@playwright/test');
 const { buttonByName, waitForSpinnerToDisappear } = require('../Pages/utilities/GlobalFunctions.spec');
+const { captureStepScreenshot } = require('../Pages/utilities/screenshotUtil.spec');
 
 export class InventoryPage {
     constructor(page) {
         this.page = page;
+        const rows = this.page.locator('div#gvInventoryStatus div div').nth(2).locator('table tbody tr');
+        // (2) div(1) table tbody tr');
+        this.rows = rows;
     }
 
     branchCodeDropdownOptions(branchName) {
@@ -11,7 +15,7 @@ export class InventoryPage {
     }
 
     async searchInventory() {
-        await buttonByName(page, 'Search Inventory').click();
+        await buttonByName('Search Inventory').click();
         //        await expect(this.page.locator('div.box-name span', { hasText: "Search Inventory" })).toBeVisible();
         await validatePage("Search Inventory");
     }
@@ -24,17 +28,19 @@ export class InventoryPage {
 
     async inventoryDashboard() {
         await buttonByName('Inventory Dashboard').click();
-        await waitForSpinnerToDisappear('#dvImgContainerPL', 15000);
+        await waitForSpinnerToDisappear('#dvImgContainerPL img', 30000);
         //        await expect(this.page.locator('div.box-name span', { hasText: "Request Inventory" })).toBeVisible();
         await expect(this.page.locator('div.box-name span span', { hasText: "Inventory Dashboard" })).toBeVisible();
     }
 
     async inventoryDashboard(instName, branchName) {
         await buttonByName('Inventory Dashboard').click();
+        await waitForSpinnerToDisappear('#dvImgContainerPL img', 30000);
+        await this.page.waitForLoadState('networkidle', { timeout: 60000 });
         //        await expect(this.page.locator('div.box-name span', { hasText: "Request Inventory" })).toBeVisible();
-        await expect(this.page.locator('div.box-name span span', { hasText: "Inventory Dashboard" })).toBeVisible();
-        this.page.locator('div select#ddlInstitutionName').click();
-        this.page.locator('div select#ddlInstitutionName').selectOption(instName);
+        await expect(this.page.locator('div.box-name span span', { hasText: "Inventory Dashboard" })).toBeVisible({ timeout: 60000 });
+        await this.page.locator('div select#ddlInstitutionName').click();
+        await this.page.locator('div select#ddlInstitutionName').selectOption(instName);
         // await this.page.getByRole('combobox').filter({ hasText: /^$/ }).click();
         // await this.page.getByRole('combobox').filter({ hasText: /^$/ }).type(branchName, {delay: 200});
         await this.page.locator('#ddlBranchStoreName').click();
@@ -52,7 +58,24 @@ export class InventoryPage {
         // await this.page.locator('div#ddlBranchStoreName input').type(branchName);
         // await this.page.locator('.a0b506dde18d div span', { hasText : branchName} ).click();
         await expect(this.page.getByRole('textbox', { name: 'Branch Code / Store ID:' })).toHaveValue(branchName);
-        await this.page.locator('button', { hasText: "Show Inventory Details" }).click();
-        await waitForSpinnerToDisappear('#dvImgContainerPL', 15000);
+        // await this.page.locator('button', { hasText: "Show Inventory Details" }).click();
+
+        await Promise.all([
+            this.page.locator('button', { name: 'Show Inventory Details' }).first().click(),
+            waitForSpinnerToDisappear('#dvImgContainerPL img'),
+            // waitForAPIRequestAndResponse('/GetInventoryStatus'),
+        ]);
+
+        // await expect.poll(() => this.page.locator('div#gvInventoryStatus'), { timeout: 90000 }).toBeVisible();
+        await expect(this.page.locator('div#gvInventoryStatus')).toBeVisible({ timeout: 90000 });
+        // await this.page.locator('button', { name: 'Show Inventory Details' }).first().click();
+        // await waitForSpinnerToDisappear('#dvImgContainerPL img', 45000);
+        // await this.page.waitForLoadState('networkidle', {timeout: 60000} );
+        // await waitForAPIRequestAndResponse('GetInventoryStatus', 60000);
+
+        await this.rows.last().scrollIntoViewIfNeeded();
+
+        await captureStepScreenshot(this.page, 'ValidateInventoryDashboard');
+
     }
 }

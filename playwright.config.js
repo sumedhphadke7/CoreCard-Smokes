@@ -32,8 +32,8 @@ export default defineConfig({
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on',
     use: {
-      actionTimeout: 90000,   // timeout for actions like click/fill
-      navigationTimeout: 60000, // timeout for page.goto(), waitForLoadState
+      actionTimeout: 120000,   // timeout for actions like click/fill
+      navigationTimeout: 300000, // timeout for page.goto(), waitForLoadState
       headless: true
     },
   },

@@ -3,9 +3,10 @@ import { LoginPage } from '../Pages/LoginPage.spec';
 import { HomePage } from '../Pages/HomePage.spec';
 import { captureStepScreenshot } from '../Pages/utilities/screenshotUtil.spec';
 import { InventoryPage } from '../Pages/InventoryPage.spec';
-//const { setPage } = require('../Pages/utilities/GlobalFunctions.spec');
+const { waitForAPIRequest } = require('../Pages/utilities/GlobalFunctions.spec');
 
 test('CC100048_SmokeTest', async ({ page }) => {
+  test.setTimeout(60_000);
   // setPage(page);
   const validateHomePage = page.locator('div.advertizeHeader');
 
@@ -16,11 +17,12 @@ test('CC100048_SmokeTest', async ({ page }) => {
   //User login block start
   await loginPage.navigatePage();
   await loginPage.userLogin('sumedh.cc.admin', 'Test123!');
-  if((await loginPage.sessionError.isVisible())) {
+  if ((await loginPage.sessionError.isVisible())) {
     await loginPage.userLogin('sumedh.cc.admin', 'Test123!');
   }
-  await page.waitForLoadState('networkidle', {timeout:60000} );
-//  await expect(page.locator('div.advertizeHeader')).toBeVisible( {timeout: 60000} );
+  await page.waitForLoadState('networkidle', { timeout: 60000 });
+  // await waitForAPIRequestAndResponse('UserLogin');
+  await expect(page.locator('div.advertizeHeader')).toBeVisible({ timeout: 60000 });
   await expect(validateHomePage).toHaveText('Convenient Cards, Inc.');
   await validateHomePage.hover();
   await captureStepScreenshot(page, 'validateHomePage');

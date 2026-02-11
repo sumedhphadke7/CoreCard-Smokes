@@ -4,7 +4,7 @@ export class LoginPage {
         this.usernameField = this.page.locator('[name="txtUserId"]');
         this.passwordField = this.page.locator('[name="password"]');
         this.loginBtn = this.page.locator('.NewLoginBtn');
-        this.sessionError = page.locator('div.alert', {hasText: "Your session has expired. Please log in again!"});
+        this.sessionError = this.page.locator('div.alert', { hasText: "Your session has expired. Please log in again!" });
     }
 
     async navigatePage() {
@@ -18,7 +18,6 @@ export class LoginPage {
         await this.usernameField.fill(username);
         await this.passwordField.fill(password);
         await this.loginBtn.click();
-
         // if((await this.sessionError.isVisible())) {
         //     await this.page.reload();
         //     await this.userLogin(username, password);

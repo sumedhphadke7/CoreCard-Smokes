@@ -10,13 +10,13 @@ export class LoginPage {
     async navigatePage() {
         await this.page.goto('https://testcoremoneyuat.corecard.com:5354/LoginManagement/Login/Login');
         // await this.page.goto('https://testcoremoney.corecard.com/LoginManagement/Login/Login');
-
+        await this.page.waitForLoadState('networkidle');
         // await this.page.reload();
     }
 
     async userLogin(username, password) {
-        await this.usernameField.fill(username);
-        await this.passwordField.fill(password);
+        await this.usernameField.pressSequentially(username);
+        await this.passwordField.pressSequentially(password);
         await this.loginBtn.click();
         // if((await this.sessionError.isVisible())) {
         //     await this.page.reload();

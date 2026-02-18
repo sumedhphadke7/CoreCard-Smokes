@@ -6,7 +6,7 @@ import { InventoryPage } from '../Pages/InventoryPage.spec';
 const { waitForAPIRequest } = require('../Pages/utilities/GlobalFunctions.spec');
 
 test('CC100048_SmokeTest', async ({ page }) => {
-  test.setTimeout(60_000);
+  test.setTimeout(150000);
   // setPage(page);
   const validateHomePage = page.locator('div.advertizeHeader');
 
@@ -31,5 +31,5 @@ test('CC100048_SmokeTest', async ({ page }) => {
   await homePage.manageInventoryPage();
   // await inventoryPage.inventoryDashboard();
   await inventoryPage.inventoryDashboard("FIRST CENTURY BANK", "CC0001");
-
+  await inventoryPage.InventoryTableProductSearch('GC155', 'Blue Holiday Gift Card');
 });

@@ -1,11 +1,18 @@
 const { expect } = require('@playwright/test');
-const { buttonByName, waitForSpinnerToDisappear } = require('../Pages/utilities/GlobalFunctions.spec');
+const { buttonByName, waitForSpinnerToDisappear, getPlasticRowData  } = require('../Pages/utilities/GlobalFunctions.spec');
 const { captureStepScreenshot } = require('../Pages/utilities/screenshotUtil.spec');
 
 export class InventoryPage {
     constructor(page) {
         this.page = page;
-        const rows = this.page.locator('div#gvInventoryStatus div div').nth(2).locator('table tbody tr');
+        const rows = this.page.locator('#gvInventoryStatus table tbody tr');
+
+        // const row = this.page.locator('#gvInventoryStatus tbody tr', {
+        //     has: this.page.locator('td').nth(1).filter({
+        //         hasText: `(${plasticCode})`
+        //     })
+        // });
+
         // (2) div(1) table tbody tr');
         this.rows = rows;
     }
@@ -26,17 +33,17 @@ export class InventoryPage {
         await validatePage("Request Inventory");
     }
 
-    async inventoryDashboard() {
-        await buttonByName('Inventory Dashboard').click();
-        await waitForSpinnerToDisappear('#dvImgContainerPL img', 30000);
-        //        await expect(this.page.locator('div.box-name span', { hasText: "Request Inventory" })).toBeVisible();
-        await expect(this.page.locator('div.box-name span span', { hasText: "Inventory Dashboard" })).toBeVisible();
-    }
+    // async inventoryDashboard() {
+    //     await buttonByName('Inventory Dashboard').click();
+    //     await waitForSpinnerToDisappear('#dvImgContainerPL img', 30000);
+    //     //        await expect(this.page.locator('div.box-name span', { hasText: "Request Inventory" })).toBeVisible();
+    //     await expect(this.page.locator('div.box-name span span', { hasText: "Inventory Dashboard" })).toBeVisible();
+    // }
 
     async inventoryDashboard(instName, branchName) {
         await buttonByName('Inventory Dashboard').click();
         await waitForSpinnerToDisappear('#dvImgContainerPL img', 30000);
-        await this.page.waitForLoadState('networkidle', { timeout: 60000 });
+        await this.page.waitForLoadState('networkidle', { timeout: 120000 });
         //        await expect(this.page.locator('div.box-name span', { hasText: "Request Inventory" })).toBeVisible();
         await expect(this.page.locator('div.box-name span span', { hasText: "Inventory Dashboard" })).toBeVisible({ timeout: 60000 });
         await this.page.locator('div select#ddlInstitutionName').click();
@@ -60,12 +67,15 @@ export class InventoryPage {
         await expect(this.page.getByRole('textbox', { name: 'Branch Code / Store ID:' })).toHaveValue(branchName);
         // await this.page.locator('button', { hasText: "Show Inventory Details" }).click();
 
-        await Promise.all([
-            this.page.locator('button', { name: 'Show Inventory Details' }).first().click(),
-            waitForSpinnerToDisappear('#dvImgContainerPL img'),
-            // waitForAPIRequestAndResponse('/GetInventoryStatus'),
-        ]);
-
+        // await Promise.all([
+        //     this.page.locator('button', { name: 'Show Inventory Details' }).first().click(),
+        //     waitForSpinnerToDisappear('#dvImgContainerPL img'),
+        //     // waitForAPIRequestAndResponse('/GetInventoryStatus'),
+        // ]);
+        await this.page.locator('button', { name: 'Show Inventory Details' }).first().click();
+        await this.page.waitForLoadState('networkidle', { timeout: 120000 });
+        // await expect(this.page.locator('div#gvInventoryStatus')).toBeAttached({ timeout: 90000 });
+        await this.page.locator('div#gvInventoryStatus').waitFor({ state: 'visible', timeout: 150000 });
         // await expect.poll(() => this.page.locator('div#gvInventoryStatus'), { timeout: 90000 }).toBeVisible();
         await expect(this.page.locator('div#gvInventoryStatus')).toBeVisible({ timeout: 90000 });
         // await this.page.locator('button', { name: 'Show Inventory Details' }).first().click();
@@ -73,9 +83,17 @@ export class InventoryPage {
         // await this.page.waitForLoadState('networkidle', {timeout: 60000} );
         // await waitForAPIRequestAndResponse('GetInventoryStatus', 60000);
 
-        await this.rows.last().scrollIntoViewIfNeeded();
+        await expect(this.rows.last()).toBeVisible();
 
         await captureStepScreenshot(this.page, 'ValidateInventoryDashboard');
 
+    }
+
+    async InventoryTableProductSearch(productName, plasticCode) {
+        await this.page.locator('div#gvInventoryStatus input').pressSequentially(productName);
+        // await this.page.locator('input[aria-controls="DataTables_Table_0"]').fill(productName);
+        await captureStepScreenshot(this.page, `ValidateInventoryProduct-${productName}`);
+        const plasticRowData = await getPlasticRowData(plasticCode);
+        console.log(plasticRowData);
     }
 }

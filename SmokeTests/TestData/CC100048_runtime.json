@@ -1,0 +1,21 @@
+{
+  "plasticRowData": {
+    "productName": "Convenient Visa Gift Card - GC155",
+    "plasticCode": "Blue Holiday Gift Card/Valid (44)",
+    "openingInventory": "147",
+    "closingInventory": "147"
+  },
+  "InventoryRequestorDetails": {
+    "firstName": "Auto",
+    "lastName": "Smoke",
+    "embossingLine": "Everything is Automated",
+    "companyName": "ConvAutoSmoke",
+    "addressLine1": "101 UAT Street",
+    "country": "United States",
+    "state": "Florida",
+    "city": "Miami",
+    "zipCode": "32123",
+    "plasticCode": "Blue Holiday Gift Card/Valid (44)",
+    "quantity": 2
+  }
+}

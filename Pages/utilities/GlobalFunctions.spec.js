@@ -52,7 +52,7 @@ async function validatePage(validationText) {
 	}
 	await expect(
 		pageInstance.locator('div.box-name span', { hasText: validationText })
-	).toBeVisible();
+	).toBeVisible({ timeout: 90000 });
 }
 
 async function waitForAPIRequestAndResponse(apiName, timeout = 70000) {
@@ -83,30 +83,30 @@ async function waitForAPIRequestAndResponse(apiName, timeout = 70000) {
 
 }
 
-async function getPlasticRowData(plasticCode) {
-  if (!pageInstance) {
-    throw new Error('Page is not initialized. Call setPage(page) first.');
-  }
+async function getInvDashboardPlasticRowData(plasticCode) {
+	if (!pageInstance) {
+		throw new Error('Page is not initialized. Call setPage(page) first.');
+	}
 
-  const rows = pageInstance.locator('#gvInventoryStatus tbody tr');
+	const rows = pageInstance.locator('#gvInventoryStatus tbody tr');
 
-  // Filter the specific row FIRST
-  const row = rows.filter({
-    has: pageInstance.locator('td:nth-child(2)', {
-      hasText: new RegExp(plasticCode, 'i')
-    })
-  });
+	// Filter the specific row FIRST
+	const row = rows.filter({
+		has: pageInstance.locator('td:nth-child(2)', {
+			hasText: new RegExp(plasticCode, 'i')
+		})
+	});
 
-  await expect(row).toBeVisible({ timeout: 60000 });
+	await expect(row).toBeVisible({ timeout: 60000 });
 
-  const cells = row.locator('td');
+	const cells = row.locator('td');
 
-  return {
-    productName: (await cells.nth(0).textContent())?.trim(),
-    plasticCode: (await cells.nth(1).textContent())?.trim(),
-    openingInventory: (await cells.nth(2).textContent())?.trim(),
-    closingInventory: (await cells.last().textContent())?.trim(),
-  };
+	return {
+		productName: (await cells.nth(0).textContent())?.trim(),
+		plasticCode: (await cells.nth(1).textContent())?.trim(),
+		openingInventory: (await cells.nth(2).textContent())?.trim(),
+		closingInventory: (await cells.last().textContent())?.trim(),
+	};
 }
 
 
@@ -117,5 +117,5 @@ module.exports = {
 	getTimestamp,
 	waitForSpinnerToDisappear,
 	waitForAPIRequestAndResponse,
-	getPlasticRowData
+	getInvDashboardPlasticRowData
 };

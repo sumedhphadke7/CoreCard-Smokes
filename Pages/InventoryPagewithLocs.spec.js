@@ -1,8 +1,9 @@
-import { updateRuntimeKey } from './utilities/runtimeDataManager';
+import { updateRuntimeKey } from './utilities/runtimeDataManager.js';
+import { InventoryPageLocators as InvL } from './locators/InventoryPage.locators.js';
 
 const { expect } = require('@playwright/test');
-const { buttonByName, waitForSpinnerToDisappear, validatePage, getInvDashboardPlasticRowData, getTimestamp } = require('../Pages/utilities/GlobalFunctions.spec');
-const { captureStepScreenshot } = require('../Pages/utilities/screenshotUtil.spec');
+const { buttonByName, waitForSpinnerToDisappear, validatePage, getInvDashboardPlasticRowData, getTimestamp } = require('./utilities/GlobalFunctions.spec.js');
+const { captureStepScreenshot } = require('./utilities/screenshotUtil.spec.js');
 // let plasticRowData = require('../SmokeTests/TestData/CC100048_runtime.json');
 const testData = require("../SmokeTests/TestData/CC100048_SmokeTest.json");
 const runtimeData = require('../SmokeTests/TestData/CC100048_runtime.json');
@@ -144,58 +145,58 @@ export class InventoryPage {
 		await waitForSpinnerToDisappear('#dvImgContainerPL img', 30000);
 		await validatePage("Request Inventory");
 
-		await expect(this.page.locator('#btnNextOrder')).toBeDisabled();
-		await expect(this.page.locator('#btnDecisionInventory')).toBeDisabled();
+		await expect(this.page.locator(InvL.buttons.nextOrder)).toBeDisabled();
+		await expect(this.page.locator(InvL.buttons.decisionInventory)).toBeDisabled();
 
 		await captureStepScreenshot(this.page, 'RequestInventoryForm');
-		await this.page.locator('#ddlBranchStoreName').click();
-		await this.page.locator('#ddlBranchStoreName input').pressSequentially(this.InventoryDashboardData.branchName, { delay: 200 });
+		await this.page.locator(InvL.dropdowns.branch).click();
+		await this.page.locator(InvL.dropdowns.branchInput).pressSequentially(this.InventoryDashboardData.branchName, { delay: 200 });
 		await this.page.getByRole('option', { name: new RegExp(this.InventoryDashboardData.branchName, 'i') }).click();
 
-		await this.page.locator('#ddlProductName').click();
-		await this.page.locator('#ddlProductName input').pressSequentially(this.InventoryDashboardData.productName, { delay: 200 });
+		await this.page.locator(InvL.dropdowns.product).click();
+		await this.page.locator(InvL.dropdowns.productInput).pressSequentially(this.InventoryDashboardData.productName, { delay: 200 });
 		await this.page.getByRole('option', { name: new RegExp(this.InventoryDashboardData.productName, 'i') }).click();
 
 		await waitForSpinnerToDisappear('#dvImgContainerPL img', 30000);
 
-		await expect(this.page.locator('#ddlShippingMode')).not.toHaveValue('', { timeout: 30000 });
-		await this.page.locator('#ddlShippingMode').click();
-		await expect(this.page.locator('#ddlShippingMode option', { hasText: 'Standard' })).toHaveCount(1, { timeout: 20000 });
+		await expect(this.page.locator(InvL.dropdowns.shippingMode)).not.toHaveValue('', { timeout: 30000 });
+		await this.page.locator(InvL.dropdowns.shippingMode).click();
+		await expect(this.page.locator(`${InvL.dropdowns.shippingMode} option`, { hasText: 'Standard' })).toHaveCount(1, { timeout: 20000 });
 
-		await expect(this.page.locator('#txtBranchStoreCode')).toHaveValue(this.InventoryDashboardData.branchName);
+		await expect(this.page.locator(InvL.inputs.branchCode)).toHaveValue(this.InventoryDashboardData.branchName);
 
-		await this.page.locator('#txtFirstName').fill(this.inventoryDetails.firstName, { delay: 100 });
-		await this.page.locator('#txtLastName').fill(this.inventoryDetails.lastName, { delay: 100 });
+		await this.page.locator(InvL.inputs.firstName).fill(this.inventoryDetails.firstName, { delay: 100 });
+		await this.page.locator(InvL.inputs.lastName).fill(this.inventoryDetails.lastName, { delay: 100 });
 
-		await this.page.locator('#txtNameOnCard').pressSequentially(`${this.inventoryDetails.firstName} ${this.inventoryDetails.lastName}`, { delay: 100 });
+		await this.page.locator(InvL.inputs.nameOnCard).pressSequentially(`${this.inventoryDetails.firstName} ${this.inventoryDetails.lastName}`, { delay: 100 });
 
-		await expect(this.page.locator('#txtNameOnCard')).toHaveValue(`${this.inventoryDetails.firstName} ${this.inventoryDetails.lastName}`);
-		await this.page.locator('#txtEmbossingLine4').fill(this.inventoryDetails.embossingLine, { delay: 100 });
-		await this.page.locator('#txtFICompanyName').pressSequentially(this.inventoryDetails.companyName, { delay: 100 });
-		await this.page.locator('#txtBulkShipAddress1').fill(this.inventoryDetails.addressLine1, { delay: 100 });
-		await this.page.locator('#txtBulkSHipAddress2').fill(`${getTimestamp()}`, { delay: 100 });
+		await expect(this.page.locator(InvL.inputs.nameOnCard)).toHaveValue(`${this.inventoryDetails.firstName} ${this.inventoryDetails.lastName}`);
+		await this.page.locator(InvL.inputs.embossingLine).fill(this.inventoryDetails.embossingLine, { delay: 100 });
+		await this.page.locator(InvL.inputs.companyName).pressSequentially(this.inventoryDetails.companyName, { delay: 100 });
+		await this.page.locator(InvL.inputs.address1).fill(this.inventoryDetails.addressLine1, { delay: 100 });
+		await this.page.locator(InvL.inputs.address2).fill(`${getTimestamp()}`, { delay: 100 });
 
-		await this.page.locator('#ddlCountry').click();
+		await this.page.locator(InvL.dropdowns.country).click();
 		// await this.page.getByRole('option', { name: new RegExp(this.inventoryDetails.country, 'i') }).click();
-		await this.page.locator('#ddlCountry').selectOption({ label: this.inventoryDetails.country });
+		await this.page.locator(InvL.dropdowns.country).selectOption({ label: this.inventoryDetails.country });
 
-		await this.page.locator('#ddlState').click();
+		await this.page.locator(InvL.dropdowns.state).click();
 		// await this.page.getByRole('option', { name: new RegExp(this.inventoryDetails.state, 'i') }).click();
-		await this.page.locator('#ddlState').selectOption({ label: this.inventoryDetails.state });
+		await this.page.locator(InvL.dropdowns.state).selectOption({ label: this.inventoryDetails.state });
 
 		// await this.page.locator('#ddlState').click();
 		// await this.page.getByRole('option', { name: new RegExp(this.inventoryDetails.state, 'i') }).click();
 
-		await this.page.locator('#txtCity').fill(this.inventoryDetails.city, { delay: 100 });
-		await this.page.locator('#txtZipCode').fill(this.inventoryDetails.zipCode, { delay: 100 });
+		await this.page.locator(InvL.inputs.city).fill(this.inventoryDetails.city, { delay: 100 });
+		await this.page.locator(InvL.inputs.zipCode).fill(this.inventoryDetails.zipCode, { delay: 100 });
 
-		await this.page.locator('#ddlPlasticCode').click();
+		await this.page.locator(InvL.dropdowns.plasticCode).click();
 		// await this.page.getByRole('option', { name: new RegExp(this.inventoryDetails.plasticCode, 'i') }).click();
-		await this.page.locator('#ddlPlasticCode').selectOption({ label: this.inventoryDetails.plasticCode });
+		await this.page.locator(InvL.dropdowns.plasticCode).selectOption({ label: this.inventoryDetails.plasticCode });
 
-		await this.page.locator('#txtOtherQuantity').fill(this.inventoryDetails.quantity.toString(), { delay: 100 });
+		await this.page.locator(InvL.inputs.quantity).fill(this.inventoryDetails.quantity.toString(), { delay: 100 });
 
-		await this.page.locator('#btnAddRow').click();
+		await this.page.locator(InvL.buttons.addRow).click();
 
 		const ReqInvTablecells = this.requestInventoryCells();
 
@@ -219,15 +220,15 @@ export class InventoryPage {
 			buttonName: 'Ok'
 		});
 
-		await expect(this.page.locator('#divOrderID')).toBeVisible({ timeout: 10000});
+		await expect(this.page.locator(InvL.order.orderIdContainer)).toBeVisible({ timeout: 10000});
 
-		const inventoryOrderID = await this.page.locator('#txtOrderID').textContent();
+		const inventoryOrderID = await this.page.locator(InvL.order.orderIdText).textContent();
 		updateRuntimeKey(testInfo, 'RequestedInventoryDetails.OrderID', inventoryOrderID);
 
-		await expect(this.page.locator('#btnNextOrder')).toBeEnabled();
-		await expect(this.page.locator('#btnDecisionInventory')).toBeEnabled();
+		await expect(this.page.locator(InvL.buttons.nextOrder)).toBeEnabled();
+		await expect(this.page.locator(InvL.buttons.decisionInventory)).toBeEnabled();
 
-		await this.page.locator('#btnDecisionInventory').click();
+		await this.page.locator(InvL.buttons.decisionInventory).click();
 		
 	}
 }

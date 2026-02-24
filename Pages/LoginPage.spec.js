@@ -8,7 +8,7 @@ export class LoginPage {
     }
 
     async navigatePage() {
-        await this.page.goto('https://testcoremoneyuat.corecard.com:5354/LoginManagement/Login/Login');
+        await this.page.goto('https://testcoremoneyuat.corecard.com:5354/LoginManagement/Login/Login', {waitUntil: 'domcontentloaded', timeout: 20000});
         // await this.page.goto('https://testcoremoney.corecard.com/LoginManagement/Login/Login');
         await this.page.waitForLoadState('networkidle');
         // await this.page.reload();

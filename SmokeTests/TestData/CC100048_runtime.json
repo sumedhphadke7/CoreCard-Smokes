@@ -17,5 +17,8 @@
     "zipCode": "32123",
     "plasticCode": "Blue Holiday Gift Card/Valid (44)",
     "quantity": 2
+  },
+  "RequestedInventoryDetails": {
+    "OrderID": ""
   }
 }

@@ -222,7 +222,8 @@ export class InventoryPage {
 
 		await expect(this.page.locator(InvL.order.orderIdContainer)).toBeVisible({ timeout: 10000});
 
-		const inventoryOrderID = await this.page.locator(InvL.order.orderIdText).textContent();
+		const inventoryOrderID = await this.page.locator(InvL.order.orderIdText).inputValue();
+		console.log('Inventory OrderIDL:', inventoryOrderID);
 		updateRuntimeKey(testInfo, 'RequestedInventoryDetails.OrderID', inventoryOrderID);
 
 		await expect(this.page.locator(InvL.buttons.nextOrder)).toBeEnabled();

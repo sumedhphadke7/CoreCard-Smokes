@@ -30,11 +30,11 @@ test('Login to CoreMoney UAT', async ({ page }) => {
 	await sideButton('Home').click();
 	await expect(validateHomePage).toHaveText('Convenient Cards, Inc.');
 
-	await homePage.manageInventoryPage();
+	await homePage.navToManageInventoryPage();
 	await sideButton('Home').click();
 	await expect(validateHomePage).toHaveText('Convenient Cards, Inc.');
 
-	await homePage.manageInventoryPage();
+	await homePage.navToManageInventoryPage();
 	await sideButton('Home').click();
 	await expect(validateHomePage).toHaveText('Convenient Cards, Inc.');
 

@@ -109,6 +109,33 @@ async function getInvDashboardPlasticRowData(plasticCode) {
 	};
 }
 
+async function extractRowData(rowLocator, orderID) {
+	if (!pageInstance) {
+		throw new Error('Page is not initialized. Call setPage(page) first.');
+	}
+
+	// Filter the specific row FIRST
+	const row = pageInstance.locator(rowLocator).filter({
+		has: pageInstance.locator('td:nth-child(4)', {
+			hasText: new RegExp(`^${orderID}$`)
+		})
+	});
+
+	await expect(row).toBeVisible({ timeout: 60000 });
+
+	const cells = row.locator('td');
+
+	return {
+		branchStoreName: (await cells.nth(1).textContent())?.trim(),
+		productName: (await cells.nth(2).textContent())?.trim(),
+		orderID: (await cells.nth(3).textContent())?.trim(),
+		numberOfCards: (await cells.nth(4).textContent())?.trim(),
+		cardStatus: (await cells.nth(6).textContent())?.trim(),
+		requestedBy: (await cells.nth(7).textContent())?.trim(),
+		requestedOn: (await cells.nth(8).textContent())?.trim(),
+	};
+}
+
 
 module.exports = {
 	setPage,
@@ -117,5 +144,6 @@ module.exports = {
 	getTimestamp,
 	waitForSpinnerToDisappear,
 	waitForAPIRequestAndResponse,
-	getInvDashboardPlasticRowData
+	getInvDashboardPlasticRowData,
+	extractRowData
 };

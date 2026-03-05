@@ -1,75 +1,82 @@
 const fs = require('fs');
 const path = require('path');
 
+let currentTestInfo;
+
 /**
- * Resolve base test name from spec file
- * Example:
- * SmokeTests/CC100048_SmokeTest.spec.js
- * → CC100048
+ * Initialize runtime context once per test
  */
-function getTestPrefix(testInfo) {
-    const fileName = path.basename(testInfo.file); 
-    // CC100048_SmokeTest.spec.js
-
-    const baseName = fileName.replace('.spec.js', '');
-    // CC100048_SmokeTest
-
-    // Extract prefix before underscore
-    return baseName.split('_')[0];
+function initRuntimeData(testInfo) {
+    currentTestInfo = testInfo;
 }
 
 /**
- * Resolve runtime file path
+ * Resolve runtime file path dynamically
  */
-function resolveRuntimeFile(testInfo) {
-    const prefix = getTestPrefix(testInfo);
+function getRuntimeFilePath() {
+
+    if (!currentTestInfo?.file) {
+        throw new Error('initRuntimeData(testInfo) must be called in test setup');
+    }
+
+    const testFile = path.basename(currentTestInfo.file);
+
+    const runtimeFileName = testFile
+        .replace('_SmokeTest.spec.js', '_runtime.json')
+        .replace('.spec.js', '_runtime.json');
 
     return path.join(
         process.cwd(),
         'SmokeTests',
         'TestData',
-        `${prefix}_runtime.json`
+        runtimeFileName
     );
 }
 
 /**
- * Update or Add nested key
+ * Always return latest runtime data
  */
-function updateRuntimeKey(testInfo, keyPath, newValue) {
+function getRuntimeData() {
 
-    const runtimeFilePath = resolveRuntimeFile(testInfo);
+    const runtimeFile = getRuntimeFilePath();
 
-    let data = {};
+    return JSON.parse(
+        fs.readFileSync(runtimeFile, 'utf8')
+    );
+}
 
-    if (fs.existsSync(runtimeFilePath)) {
-        data = JSON.parse(
-            fs.readFileSync(runtimeFilePath, 'utf8')
-        );
-    }
+/**
+ * Update runtime key
+ */
+function updateRuntimeKey(keyPath, value) {
 
-    const keys = keyPath.split('.');
-    let current = data;
+    const runtimeFile = getRuntimeFilePath();
 
-    keys.forEach((key, index) => {
-        if (index === keys.length - 1) {
-            current[key] = newValue;
-        } else {
-            if (!current[key] || typeof current[key] !== 'object') {
-                current[key] = {};
-            }
-            current = current[key];
-        }
-    });
-
-    fs.writeFileSync(
-        runtimeFilePath,
-        JSON.stringify(data, null, 2),
-        'utf8'
+    const data = JSON.parse(
+        fs.readFileSync(runtimeFile, 'utf8')
     );
 
-    console.log(`Updated ${keyPath} in ${path.basename(runtimeFilePath)}`);
+    const keys = keyPath.split('.');
+    let obj = data;
+
+    while (keys.length > 1) {
+        const key = keys.shift();
+        obj[key] = obj[key] || {};
+        obj = obj[key];
+    }
+
+    obj[keys[0]] = value;
+
+    fs.writeFileSync(
+        runtimeFile,
+        JSON.stringify(data, null, 2)
+    );
+
+    console.log(`Updated ${keyPath} in ${path.basename(runtimeFile)}`);
 }
 
 module.exports = {
+    initRuntimeData,
+    getRuntimeData,
     updateRuntimeKey
 };

@@ -1,8 +1,13 @@
 {
-    "InventoryDashboardData": {
-        "instName": "FIRST CENTURY BANK",
-        "branchName": "CC0001",
-        "productName": "GC155",
-        "plasticCode": "Blue Holiday Gift Card"
-    }
+	"credentials": {
+		"username": "sumedh.cc.admin",
+		"password": "Test123!"
+	},
+	
+	"InventoryDashboardData": {
+		"instName": "FIRST CENTURY BANK",
+		"branchName": "CC0001",
+		"productName": "GC155",
+		"plasticCode": "Blue Holiday Gift Card"
+	}
 }

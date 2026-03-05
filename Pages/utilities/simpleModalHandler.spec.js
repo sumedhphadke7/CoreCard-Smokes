@@ -28,8 +28,8 @@ async function handleModal(page, {
     console.log('Modal Body message:', await body.textContent());
     await expect(body).toContainText(expectedBody);
 
-    // Click button
-    await modal.getByRole('button', { name: new RegExp(`^${buttonName}$`, 'i') }).click();
+    // Click footer button (avoid header X)
+    await modal.getByRole('button', { name: new RegExp(`^${buttonName}$`, 'i') }).last().click();
 
     // Validate modal is closed
     await expect(modal).toBeHidden();

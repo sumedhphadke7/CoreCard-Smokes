@@ -29,7 +29,7 @@ export class HomePage {
         await expect(this.page.locator('div h3 span', { hasText: "Where would you like to start?" })).toBeVisible();
     }
 
-    async manageCardPage() {
+    async navToManageCardPage() {
         await buttonByName('Manage Card').click();
         await expect(this.buttonByName('Load/Reload Card')).toBeVisible();
 //        await expect(this.validationText('Manage Card')).toBeVisible();
@@ -37,7 +37,7 @@ export class HomePage {
         await validatePage("Manage Card");
     }
 
-    async manageInventoryPage() {
+    async navToManageInventoryPage() {
         await buttonByName('Manage Inventory').click();
         await expect(this.page.locator('div.box-name span span', { hasText: "Manage Inventory" })).toBeVisible();
 //        await validatePage(this.page, "Manage Inventory");

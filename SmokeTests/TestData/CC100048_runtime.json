@@ -2,8 +2,8 @@
   "plasticRowData": {
     "productName": "Convenient Visa Gift Card - GC155",
     "plasticCode": "Blue Holiday Gift Card/Valid (44)",
-    "openingInventory": "147",
-    "closingInventory": "147"
+    "openingInventory": "139",
+    "closingInventory": "139"
   },
   "InventoryRequestorDetails": {
     "firstName": "Auto",
@@ -19,6 +19,71 @@
     "quantity": 2
   },
   "RequestedInventoryDetails": {
-    "OrderID": ""
+    "OrderID": "78725"
+  },
+  "InventoryOrders": {
+    "78671": {
+      "branchStoreName": "Convenient Cards, Inc. (CC0001)",
+      "productName": "Convenient Visa Gift Card - GC155",
+      "orderID": "78671",
+      "numberOfCards": "2",
+      "cardStatus": "Approval Pending",
+      "requestedBy": "sumedh.cc.admin",
+      "requestedOn": "03/03/2026 02:50:12"
+    },
+    "78672": {
+      "branchStoreName": "Convenient Cards, Inc. (CC0001)",
+      "productName": "Convenient Visa Gift Card - GC155",
+      "orderID": "78672",
+      "numberOfCards": "2",
+      "cardStatus": "Approval Pending",
+      "requestedBy": "sumedh.cc.admin",
+      "requestedOn": "03/03/2026 03:01:49"
+    },
+    "78675": {
+      "branchStoreName": "Convenient Cards, Inc. (CC0001)",
+      "productName": "Convenient Visa Gift Card - GC155",
+      "orderID": "78675",
+      "numberOfCards": "2",
+      "cardStatus": "Approval Pending",
+      "requestedBy": "sumedh.cc.admin",
+      "requestedOn": "03/03/2026 05:20:29"
+    },
+    "78676": {
+      "branchStoreName": "Convenient Cards, Inc. (CC0001)",
+      "productName": "Convenient Visa Gift Card - GC155",
+      "orderID": "78676",
+      "numberOfCards": "2",
+      "cardStatus": "Approval Pending",
+      "requestedBy": "sumedh.cc.admin",
+      "requestedOn": "03/03/2026 05:30:54"
+    },
+    "78677": {
+      "branchStoreName": "Convenient Cards, Inc. (CC0001)",
+      "productName": "Convenient Visa Gift Card - GC155",
+      "orderID": "78677",
+      "numberOfCards": "2",
+      "cardStatus": "Cards Created",
+      "requestedBy": "sumedh.cc.admin",
+      "requestedOn": "03/03/2026 05:40:54"
+    },
+    "78722": {
+      "branchStoreName": "Convenient Cards, Inc. (CC0001)",
+      "productName": "Convenient Visa Gift Card - GC155",
+      "orderID": "78722",
+      "numberOfCards": "2",
+      "cardStatus": "Approval Pending",
+      "requestedBy": "sumedh.cc.admin",
+      "requestedOn": "03/05/2026 02:45:00"
+    },
+    "78725": {
+      "branchStoreName": "Convenient Cards, Inc. (CC0001)",
+      "productName": "Convenient Visa Gift Card - GC155",
+      "orderID": "78725",
+      "numberOfCards": "2",
+      "cardStatus": "Approved",
+      "requestedBy": "sumedh.cc.admin",
+      "requestedOn": "03/05/2026 04:47:49"
+    }
   }
 }

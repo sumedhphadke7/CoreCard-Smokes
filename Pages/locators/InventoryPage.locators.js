@@ -1,4 +1,7 @@
 export const InventoryPageLocators = {
+
+  pageValidator: 'div.box-name span',
+  
   buttons: {
     searchInventory: 'button:has-text("Search Inventory")',
     requestInventory: 'button:has-text("Request Inventory")',
@@ -36,11 +39,16 @@ export const InventoryPageLocators = {
 
   tables: {
     inventoryGrid: '#gvInventoryStatus',
-    plasticDetailsRows: '#gvPlasticCOdeDetails tbody tr'
+    plasticDetailsRows: '#gvPlasticCOdeDetails tbody tr',
+    orderGrid: 'div#dgRequestList',
+    orderGridTable: 'div#dgRequestList table',
+    orderGridRows: 'div#dgRequestList table tbody tr'
   },
 
   order: {
     orderIdContainer: '#divOrderID',
-    orderIdText: 'input#txtOrderID'
+    orderIdText: 'input#txtOrderID',
+    requestorID: 'input#txtRequestedBy',
+    requestDate: 'input#txtRequestedOn'
   }
 };

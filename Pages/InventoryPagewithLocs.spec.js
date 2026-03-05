@@ -1,13 +1,13 @@
-import { updateRuntimeKey } from './utilities/runtimeDataManager.js';
-import { InventoryPageLocators as InvL } from './locators/InventoryPage.locators.js';
-
 const { expect } = require('@playwright/test');
-const { buttonByName, waitForSpinnerToDisappear, validatePage, getInvDashboardPlasticRowData, getTimestamp } = require('./utilities/GlobalFunctions.spec.js');
+import { getRuntimeData, updateRuntimeKey } from './utilities/runtimeDataManager.js';
+import { InventoryPageLocators as InvL } from './locators/InventoryPage.locators.js';
+import { handleModal } from './utilities/simpleModalHandler.spec.js';
+
+const { buttonByName, waitForSpinnerToDisappear, validatePage, getInvDashboardPlasticRowData, getTimestamp, extractRowData } = require('./utilities/GlobalFunctions.spec.js');
 const { captureStepScreenshot } = require('./utilities/screenshotUtil.spec.js');
 // let plasticRowData = require('../SmokeTests/TestData/CC100048_runtime.json');
+
 const testData = require("../SmokeTests/TestData/CC100048_SmokeTest.json");
-const runtimeData = require('../SmokeTests/TestData/CC100048_runtime.json');
-import { handleModal } from './utilities/simpleModalHandler.spec.js';
 
 export class InventoryPage {
 	constructor(page) {
@@ -15,10 +15,7 @@ export class InventoryPage {
 		const rows = this.page.locator('#gvInventoryStatus table tbody tr');
 
 		this.InventoryDashboardData = testData.InventoryDashboardData;
-		// this.runtimeData = runtimeData;
-
-		this.plasticRowData = runtimeData.plasticRowData;
-		this.inventoryDetails = runtimeData.InventoryRequestorDetails;
+		// this.runtimeData = runtimeData();
 
 		// this.instName = testData.instName;
 		// this.branchName = testData.branchName;
@@ -36,6 +33,10 @@ export class InventoryPage {
 		this.rows = rows;
 	}
 
+	get runtimeData() {
+		return getRuntimeData(); // always latest data
+	}
+
 	branchCodeDropdownOptions(branchName) {
 		return page.locator('.ng-option-label', { hasText: this.branchName })
 	}
@@ -43,16 +44,36 @@ export class InventoryPage {
 	requestInventoryCells() {
 		return this.page.locator('#gvPlasticCOdeDetails tbody tr').filter({
 			has: this.page.locator('td:nth-child(2)', {
-				hasText: this.inventoryDetails.plasticCode
+				hasText: this.runtimeData.InventoryRequestorDetails.plasticCode
 			})
 		}).locator('td');
 	}
 
-	async searchInventory() {
+	async navToSearchInventory() {
 		await buttonByName('Search Inventory').click();
 		//        await expect(this.page.locator('div.box-name span', { hasText: "Search Inventory" })).toBeVisible();
 		await validatePage("Search Inventory");
 	}
+
+	async searchInventorybyOrderID(testInfo) {
+		await expect(this.page.locator(InvL.pageValidator, { hasText: "Search Inventory" })).toBeVisible({ timeout: 60000 });
+		await this.page.locator(InvL.order.orderIdText).fill(String(this.runtimeData.RequestedInventoryDetails.OrderID), { delay: 100 });
+		await this.page.getByRole('button', { name: 'Search' }).click();
+		await expect(this.page.locator(InvL.tables.orderGrid)).toBeVisible({ timeout: 25000 });
+		await expect(this.page.getByRole('button', { name: 'Decision Inventory' })).toBeDisabled({ timeout: 10000 });
+		const orderRowData = await extractRowData(InvL.tables.orderGridRows, this.runtimeData.RequestedInventoryDetails.OrderID);
+		await captureStepScreenshot(this.page, 'SearchInventoryByOrderID');
+		console.log(orderRowData);
+		updateRuntimeKey(`InventoryOrders.${this.runtimeData.RequestedInventoryDetails.OrderID}`, orderRowData);
+		await this.page.locator(InvL.tables.orderGridRows).filter({
+			has: this.page.locator('td:nth-child(4)', {
+				hasText: new RegExp(`^${this.runtimeData.RequestedInventoryDetails.OrderID}$`)
+			})
+		}).locator('td').nth(0).click();
+		await expect(this.page.getByRole('button', { name: 'Decision Inventory' })).toBeEnabled({ timeout: 10000 });
+	}
+
+	async searchInventoryResult() { }
 
 	async requestInventory() {
 		await buttonByName('Request Inventory').click();
@@ -120,26 +141,26 @@ export class InventoryPage {
 		await this.page.locator('div#gvInventoryStatus input').pressSequentially(this.InventoryDashboardData.productName);
 		// await this.page.locator('input[aria-controls="DataTables_Table_0"]').fill(productName);
 		await captureStepScreenshot(this.page, `ValidateInventoryProduct-${this.InventoryDashboardData.productName}`);
-		this.plasticRowData = await getInvDashboardPlasticRowData(this.InventoryDashboardData.plasticCode);
-		console.log(this.plasticRowData);
-		updateRuntimeKey(testInfo, 'plasticRowData', this.plasticRowData);
-		updateRuntimeKey(testInfo, 'InventoryRequestorDetails.plasticCode', this.plasticRowData.plasticCode);
-		this.inventoryDetails.plasticCode = this.plasticRowData.plasticCode;
+		const plasticRowData = await getInvDashboardPlasticRowData(this.InventoryDashboardData.plasticCode);
+		console.log(plasticRowData);
+		updateRuntimeKey('plasticRowData', plasticRowData);
+		updateRuntimeKey('InventoryRequestorDetails.plasticCode', plasticRowData.plasticCode);
+		// this.inventoryDetails.plasticCode = runtimeData.plasticRowData.plasticCode;
 	}
 
 	async requestInventory(testInfo) {
 		// const requestInventoryRow = this.page.locator('#gvPlasticCOdeDetails tbody tr').filter({ hasText: this.InventoryDashboardData.plasticCode });
 		// const requestInventoryRow = this.page.locator('#gvPlasticCOdeDetails tbody tr').filter({ hasText: new RegExp(this.inventoryDetails.plasticCode, 'i') });
 		// const requestInventoryRowData = requestInventoryRow.locator('td').allTextContents();
-/*
-		const plasticTableRows = this.page.locator('#gvPlasticCOdeDetails tbody tr').filter(
-			{
-				has: this.page.locator('td:nth-child(2)', {
-					hasText: new RegExp(this.inventoryDetails.plasticCode, 'i')
-				})
-			});
-		const ReqInvTablecells = plasticTableRows.locator('td');
-*/
+		/*
+				const plasticTableRows = this.page.locator('#gvPlasticCOdeDetails tbody tr').filter(
+					{
+						has: this.page.locator('td:nth-child(2)', {
+							hasText: new RegExp(this.inventoryDetails.plasticCode, 'i')
+						})
+					});
+				const ReqInvTablecells = plasticTableRows.locator('td');
+		*/
 
 		await buttonByName('Request Inventory').click();
 		await waitForSpinnerToDisappear('#dvImgContainerPL img', 30000);
@@ -165,36 +186,36 @@ export class InventoryPage {
 
 		await expect(this.page.locator(InvL.inputs.branchCode)).toHaveValue(this.InventoryDashboardData.branchName);
 
-		await this.page.locator(InvL.inputs.firstName).fill(this.inventoryDetails.firstName, { delay: 100 });
-		await this.page.locator(InvL.inputs.lastName).fill(this.inventoryDetails.lastName, { delay: 100 });
+		await this.page.locator(InvL.inputs.firstName).fill(this.runtimeData.InventoryRequestorDetails.firstName, { delay: 100 });
+		await this.page.locator(InvL.inputs.lastName).fill(this.runtimeData.InventoryRequestorDetails.lastName, { delay: 100 });
 
-		await this.page.locator(InvL.inputs.nameOnCard).pressSequentially(`${this.inventoryDetails.firstName} ${this.inventoryDetails.lastName}`, { delay: 100 });
+		await this.page.locator(InvL.inputs.nameOnCard).pressSequentially(`${this.runtimeData.InventoryRequestorDetails.firstName} ${this.runtimeData.InventoryRequestorDetails.lastName}`, { delay: 100 });
 
-		await expect(this.page.locator(InvL.inputs.nameOnCard)).toHaveValue(`${this.inventoryDetails.firstName} ${this.inventoryDetails.lastName}`);
-		await this.page.locator(InvL.inputs.embossingLine).fill(this.inventoryDetails.embossingLine, { delay: 100 });
-		await this.page.locator(InvL.inputs.companyName).pressSequentially(this.inventoryDetails.companyName, { delay: 100 });
-		await this.page.locator(InvL.inputs.address1).fill(this.inventoryDetails.addressLine1, { delay: 100 });
+		await expect(this.page.locator(InvL.inputs.nameOnCard)).toHaveValue(`${this.runtimeData.InventoryRequestorDetails.firstName} ${this.runtimeData.InventoryRequestorDetails.lastName}`);
+		await this.page.locator(InvL.inputs.embossingLine).fill(this.runtimeData.InventoryRequestorDetails.embossingLine, { delay: 100 });
+		await this.page.locator(InvL.inputs.companyName).pressSequentially(this.runtimeData.InventoryRequestorDetails.companyName, { delay: 100 });
+		await this.page.locator(InvL.inputs.address1).fill(this.runtimeData.InventoryRequestorDetails.addressLine1, { delay: 100 });
 		await this.page.locator(InvL.inputs.address2).fill(`${getTimestamp()}`, { delay: 100 });
 
 		await this.page.locator(InvL.dropdowns.country).click();
 		// await this.page.getByRole('option', { name: new RegExp(this.inventoryDetails.country, 'i') }).click();
-		await this.page.locator(InvL.dropdowns.country).selectOption({ label: this.inventoryDetails.country });
+		await this.page.locator(InvL.dropdowns.country).selectOption({ label: this.runtimeData.InventoryRequestorDetails.country });
 
 		await this.page.locator(InvL.dropdowns.state).click();
 		// await this.page.getByRole('option', { name: new RegExp(this.inventoryDetails.state, 'i') }).click();
-		await this.page.locator(InvL.dropdowns.state).selectOption({ label: this.inventoryDetails.state });
+		await this.page.locator(InvL.dropdowns.state).selectOption({ label: this.runtimeData.InventoryRequestorDetails.state });
 
 		// await this.page.locator('#ddlState').click();
 		// await this.page.getByRole('option', { name: new RegExp(this.inventoryDetails.state, 'i') }).click();
 
-		await this.page.locator(InvL.inputs.city).fill(this.inventoryDetails.city, { delay: 100 });
-		await this.page.locator(InvL.inputs.zipCode).fill(this.inventoryDetails.zipCode, { delay: 100 });
+		await this.page.locator(InvL.inputs.city).fill(this.runtimeData.InventoryRequestorDetails.city, { delay: 100 });
+		await this.page.locator(InvL.inputs.zipCode).fill(this.runtimeData.InventoryRequestorDetails.zipCode, { delay: 100 });
 
 		await this.page.locator(InvL.dropdowns.plasticCode).click();
 		// await this.page.getByRole('option', { name: new RegExp(this.inventoryDetails.plasticCode, 'i') }).click();
-		await this.page.locator(InvL.dropdowns.plasticCode).selectOption({ label: this.inventoryDetails.plasticCode });
+		await this.page.locator(InvL.dropdowns.plasticCode).selectOption({ label: this.runtimeData.InventoryRequestorDetails.plasticCode });
 
-		await this.page.locator(InvL.inputs.quantity).fill(this.inventoryDetails.quantity.toString(), { delay: 100 });
+		await this.page.locator(InvL.inputs.quantity).fill(this.runtimeData.InventoryRequestorDetails.quantity.toString(), { delay: 100 });
 
 		await this.page.locator(InvL.buttons.addRow).click();
 
@@ -205,13 +226,13 @@ export class InventoryPage {
 		// await expect(requestInventoryRowData[2]).toHaveValue(this.inventoryDetails.quantity, { timeout: 20000 });
 
 		await captureStepScreenshot(this.page, 'FilledRequestInventoryForm');
-		
+
 		await expect(ReqInvTablecells.first()).toBeVisible();
-		await expect(ReqInvTablecells.nth(1)).toContainText(`${this.inventoryDetails.plasticCode}`);
-		await expect(ReqInvTablecells.nth(3)).toHaveText(this.inventoryDetails.quantity.toString());
+		await expect(ReqInvTablecells.nth(1)).toContainText(`${this.runtimeData.InventoryRequestorDetails.plasticCode}`);
+		await expect(ReqInvTablecells.nth(3)).toHaveText(this.runtimeData.InventoryRequestorDetails.quantity.toString());
 
 		// await expect(this.page.locator('#divPlasticDetails table tbody tr td', { hasText: this.inventoryDetails.plasticCode })).toBeVisible({ timeout: 20000 });
-		
+
 		await this.page.getByRole('button', { name: 'Submit' }).click();
 
 		await handleModal(this.page, {
@@ -220,16 +241,40 @@ export class InventoryPage {
 			buttonName: 'Ok'
 		});
 
-		await expect(this.page.locator(InvL.order.orderIdContainer)).toBeVisible({ timeout: 10000});
+		await expect(this.page.locator(InvL.order.orderIdContainer)).toBeVisible({ timeout: 10000 });
 
 		const inventoryOrderID = await this.page.locator(InvL.order.orderIdText).inputValue();
-		console.log('Inventory OrderIDL:', inventoryOrderID);
-		updateRuntimeKey(testInfo, 'RequestedInventoryDetails.OrderID', inventoryOrderID);
+		console.log('Inventory OrderID:', inventoryOrderID);
+		updateRuntimeKey('RequestedInventoryDetails.OrderID', inventoryOrderID);
 
 		await expect(this.page.locator(InvL.buttons.nextOrder)).toBeEnabled();
 		await expect(this.page.locator(InvL.buttons.decisionInventory)).toBeEnabled();
 
-		await this.page.locator(InvL.buttons.decisionInventory).click();
+		// await this.page.locator(InvL.buttons.decisionInventory).click();
+
+	}
+
+	async decisionInventory(testInfo) {
+		if (await this.page.getByRole('button', { name: 'Decision Inventory' }).isVisible({ timeout: 10000 })) {
+			await this.page.getByRole('button', { name: 'Decision Inventory' }).click();
+		}
+		await validatePage("Decision Inventory");
+		const orderId = this.runtimeData.RequestedInventoryDetails.OrderID;
+		const orderData = this.runtimeData.InventoryOrders[`${orderId}`];
 		
+		await expect(this.page.locator(InvL.dropdowns.branch)).toHaveValue(orderData.branchStoreName, { timeout: 20000 });
+		await expect(this.page.locator(InvL.dropdowns.product)).toHaveValue(orderData.productName, { timeout: 20000 });
+		await expect(this.page.locator(`${InvL.tables.plasticDetailsRows} td`).nth(3)).toHaveText(orderData.numberOfCards.toString(), { timeout: 20000 });
+		await expect(this.page.locator(InvL.order.orderIdText)).toHaveValue(orderId, { timeout: 20000 });
+		await expect(this.page.locator(InvL.order.requestorID)).toHaveValue(orderData.requestedBy, { timeout: 20000 });
+		await expect(this.page.locator(InvL.order.requestDate)).toHaveValue(orderData.requestedOn, { timeout: 20000 });
+		await this.page.getByRole('button', { name: 'Approve' }).click();
+		await handleModal(this.page, {
+			expectedHeader: 'Success',
+			expectedBody: 'Processed Successfully.',
+			buttonName: 'Close'
+		});
+		await captureStepScreenshot(this.page, 'ApprovedInventoryRequest');
+		updateRuntimeKey(`InventoryOrders.${orderId}.cardStatus`, "Approved");
 	}
 }

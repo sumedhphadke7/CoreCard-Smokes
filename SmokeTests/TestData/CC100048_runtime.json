@@ -5,6 +5,7 @@
     "openingInventory": "139",
     "closingInventory": "139"
   },
+  
   "InventoryRequestorDetails": {
     "firstName": "Auto",
     "lastName": "Smoke",
@@ -18,9 +19,11 @@
     "plasticCode": "Blue Holiday Gift Card/Valid (44)",
     "quantity": 2
   },
+
   "RequestedInventoryDetails": {
     "OrderID": "78725"
   },
+
   "InventoryOrders": {
     "78671": {
       "branchStoreName": "Convenient Cards, Inc. (CC0001)",
@@ -29,7 +32,8 @@
       "numberOfCards": "2",
       "cardStatus": "Approval Pending",
       "requestedBy": "sumedh.cc.admin",
-      "requestedOn": "03/03/2026 02:50:12"
+      "requestedOn": "03/03/2026 02:50:12",
+      "accountNumber": {}
     },
     "78672": {
       "branchStoreName": "Convenient Cards, Inc. (CC0001)",
@@ -85,5 +89,7 @@
       "requestedBy": "sumedh.cc.admin",
       "requestedOn": "03/05/2026 04:47:49"
     }
-  }
+  },
+
+  "Accounts": {}
 }

@@ -1,5 +1,5 @@
 const { expect } = require('@playwright/test');
-import { getRuntimeData, updateRuntimeKey } from './utilities/runtimeDataManager.js';
+import { getRuntimeData, updateRuntimeKey, createRuntimeAccount } from './utilities/runtimeDataManager.js';
 import { InventoryPageLocators as InvL } from './locators/InventoryPage.locators.js';
 import { handleModal } from './utilities/simpleModalHandler.spec.js';
 
@@ -70,7 +70,6 @@ export class InventoryPage {
 				hasText: new RegExp(`^${this.runtimeData.RequestedInventoryDetails.OrderID}$`)
 			})
 		}).locator('td').nth(0).click();
-		await expect(this.page.getByRole('button', { name: 'Decision Inventory' })).toBeEnabled({ timeout: 10000 });
 	}
 
 	async searchInventoryResult() { }
@@ -93,7 +92,11 @@ export class InventoryPage {
 		await waitForSpinnerToDisappear('#dvImgContainerPL img', 30000);
 		await this.page.waitForLoadState('networkidle', { timeout: 120000 });
 		//        await expect(this.page.locator('div.box-name span', { hasText: "Request Inventory" })).toBeVisible();
-		await expect(this.page.locator('div.box-name span span', { hasText: "Inventory Dashboard" })).toBeVisible({ timeout: 60000 });
+
+
+		// await expect(this.page.locator('div.box-name span span', { hasText: "Inventory Dashboard" })).toBeVisible({ timeout: 60000 });
+		await validatePage("Inventory Dashboard");
+
 		await this.page.locator('div select#ddlInstitutionName').click();
 		await this.page.locator('div select#ddlInstitutionName').selectOption(this.InventoryDashboardData.instName);
 		// await this.page.getByRole('combobox').filter({ hasText: /^$/ }).click();
@@ -255,13 +258,16 @@ export class InventoryPage {
 	}
 
 	async decisionInventory(testInfo) {
+		await expect(this.page.getByRole('button', { name: 'Decision Inventory' })).toBeEnabled({ timeout: 10000 });
+
 		if (await this.page.getByRole('button', { name: 'Decision Inventory' }).isVisible({ timeout: 10000 })) {
 			await this.page.getByRole('button', { name: 'Decision Inventory' }).click();
 		}
+
 		await validatePage("Decision Inventory");
 		const orderId = this.runtimeData.RequestedInventoryDetails.OrderID;
 		const orderData = this.runtimeData.InventoryOrders[`${orderId}`];
-		
+
 		await expect(this.page.locator(InvL.dropdowns.branch)).toHaveValue(orderData.branchStoreName, { timeout: 20000 });
 		await expect(this.page.locator(InvL.dropdowns.product)).toHaveValue(orderData.productName, { timeout: 20000 });
 		await expect(this.page.locator(`${InvL.tables.plasticDetailsRows} td`).nth(3)).toHaveText(orderData.numberOfCards.toString(), { timeout: 20000 });
@@ -276,5 +282,17 @@ export class InventoryPage {
 		});
 		await captureStepScreenshot(this.page, 'ApprovedInventoryRequest');
 		updateRuntimeKey(`InventoryOrders.${orderId}.cardStatus`, "Approved");
+	}
+
+	async getAccountNumber() {
+		await this.page.locator(InvL.tables.orderGridRows).filter({
+			has: this.page.locator('td:nth-child(4)', {
+				hasText: new RegExp(`^${this.runtimeData.RequestedInventoryDetails.OrderID}$`)
+			})
+		}).locator('td').nth(0).click();
+		await this.page.locator(InvL.buttons.inventoryDetail).click();
+
+		await validatePage('Inventory Detail');
+
 	}
 }

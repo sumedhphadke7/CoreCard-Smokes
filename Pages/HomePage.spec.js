@@ -16,14 +16,14 @@ export class HomePage {
     //     return this.page.locator('a.btn', { hasText: btnName });
     // }
 
-    async searchCardPage() {
+    async navToSearchCardPage() {
         await buttonByName('Search Card').click();
         // await expect(this.validationText('Search Card')).toBeVisible();
         // await expect(this.page.locator('div.box-name span', { hasText: "Search Card" })).toBeVisible();
         await validatePage("Search Card");
     }
 
-    async sellCardPage() {
+    async navToSellCardPage() {
         await buttonByName('Sell Card').click();
         await validatePage("");
         await expect(this.page.locator('div h3 span', { hasText: "Where would you like to start?" })).toBeVisible();
@@ -39,8 +39,9 @@ export class HomePage {
 
     async navToManageInventoryPage() {
         await buttonByName('Manage Inventory').click();
-        await expect(this.page.locator('div.box-name span span', { hasText: "Manage Inventory" })).toBeVisible();
-//        await validatePage(this.page, "Manage Inventory");
+
+        // await expect(this.page.locator('div.box-name span span', { hasText: "Manage Inventory" })).toBeVisible();
+       await validatePage("Manage Inventory");
 
     }
 }

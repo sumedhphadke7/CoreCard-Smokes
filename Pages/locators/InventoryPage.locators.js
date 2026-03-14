@@ -6,6 +6,7 @@ export const InventoryPageLocators = {
     searchInventory: 'button:has-text("Search Inventory")',
     requestInventory: 'button:has-text("Request Inventory")',
     decisionInventory: '#btnDecisionInventory',
+    inventoryDetail: '#btnInventoryDetail',
     nextOrder: '#btnNextOrder',
     submit: 'button:has-text("Submit")',
     addRow: '#btnAddRow'

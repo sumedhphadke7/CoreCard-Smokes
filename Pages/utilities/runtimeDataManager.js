@@ -75,8 +75,50 @@ function updateRuntimeKey(keyPath, value) {
     console.log(`Updated ${keyPath} in ${path.basename(runtimeFile)}`);
 }
 
+export function createRuntimeAccount(accountNumber) {
+
+  const runtime = getRuntimeData()
+
+  if (!runtime.Accounts) {
+    updateRuntimeKey('Accounts', {})
+  }
+
+  updateRuntimeKey(`Accounts.${accountNumber}`, {
+    cards: []
+  })
+}
+
+export function addRuntimeCard(accountNumber, cardDetails) {
+
+  const runtime = getRuntimeData()
+
+  const cards = runtime.Accounts[accountNumber]?.cards || []
+
+  cards.push({
+    cardNumber: cardDetails.cardNumber,
+    proxyNumber: cardDetails.proxyNumber,
+    expiry: cardDetails.expiry,
+    cvv: cardDetails.cvv,
+    cardholder: null
+  })
+
+  updateRuntimeKey(`Accounts.${accountNumber}.cards`, cards)
+}
+
+export function getRuntimeCardsByOrder(orderID) {
+
+  const runtime = getRuntimeData()
+
+  const accountNumber = runtime.InventoryOrders[orderID].accountNumber
+
+  return runtime.Accounts[accountNumber]?.cards || []
+}
+
 module.exports = {
     initRuntimeData,
     getRuntimeData,
-    updateRuntimeKey
+    updateRuntimeKey,
+    createRuntimeAccount,
+    addRuntimeCard,
+    getRuntimeCardsByOrder
 };

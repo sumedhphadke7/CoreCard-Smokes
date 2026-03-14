@@ -51,7 +51,7 @@ async function validatePage(validationText) {
 		throw new Error('Page is not initialized. Call setPage(page) first.');
 	}
 	await expect(
-		pageInstance.locator('div.box-name span', { hasText: validationText })
+		pageInstance.locator('div.box-name span:last-child', { hasText: validationText })
 	).toBeVisible({ timeout: 90000 });
 }
 

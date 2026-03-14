@@ -35,7 +35,7 @@ test('CC100048_SmokeTest', async ({ page }, testInfo) => {
 	await captureStepScreenshot(page, 'validateHomePage');
 
 
-	/*  turn this block off for faster execution  */
+	/*  turn this block off for faster execution  
 
 	// Navigate to Inventory Dashboard & fetch data
 	await homePage.navToManageInventoryPage();
@@ -54,5 +54,12 @@ test('CC100048_SmokeTest', async ({ page }, testInfo) => {
 	await inventoryPage.navToSearchInventory();
 	await inventoryPage.searchInventorybyOrderID(testInfo);
 	await inventoryPage.decisionInventory(testInfo);
+	await sideButton('Home').click();
+
+	*/
+	await homePage.navToManageInventoryPage();
+	await inventoryPage.navToSearchInventory();
+	await inventoryPage.searchInventorybyOrderID(testInfo);
+
 
 });

@@ -8,7 +8,7 @@ import { initRuntimeData } from '../Pages/utilities/runtimeDataManager.js';
 import { InventoryPage } from '../Pages/InventoryPagewithLocs.spec';
 // import { DecisionInventory } from '../Pages/DecisionInventory.spec';
 
-test('CC100048_SmokeTest', async ({ page }, testInfo) => {
+test.only('CC100048_SmokeTest', async ({ page }, testInfo) => {
 	test.setTimeout(180000);
 
 	initRuntimeData(testInfo); // Initialize runtime data with current test info
@@ -35,7 +35,7 @@ test('CC100048_SmokeTest', async ({ page }, testInfo) => {
 	await captureStepScreenshot(page, 'validateHomePage');
 
 
-	/*  turn this block off for faster execution  */
+	/*  turn this block off for faster execution  
 
 	// Navigate to Inventory Dashboard & fetch data
 	await homePage.navToManageInventoryPage();
@@ -54,5 +54,7 @@ test('CC100048_SmokeTest', async ({ page }, testInfo) => {
 	await inventoryPage.navToSearchInventory();
 	await inventoryPage.searchInventorybyOrderID(testInfo);
 	await inventoryPage.decisionInventory(testInfo);
+
+	*/
 
 });

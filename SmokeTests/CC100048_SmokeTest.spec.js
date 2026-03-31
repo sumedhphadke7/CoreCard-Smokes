@@ -61,7 +61,6 @@ test.only('CC100048_SmokeTest', async ({ page }, testInfo) => {
 	await inventoryPage.navToSearchInventory();
 	await inventoryPage.searchInventorybyOrderID(testInfo);
 
-
-	*/
+	/* */
 
 });

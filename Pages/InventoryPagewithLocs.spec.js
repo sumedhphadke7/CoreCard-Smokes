@@ -293,6 +293,14 @@ export class InventoryPage {
 		await this.page.locator(InvL.buttons.inventoryDetail).click();
 
 		await validatePage('Inventory Detail');
+		await expect(this.page.locator(InvL.inputs.branchName)).toHaveValue(this.runtimeData.InventoryOrders[`${this.runtimeData.RequestedInventoryDetails.OrderID}`].branchStoreName, { timeout: 20000 });
+		await expect(this.page.locator(InvL.inputs.branchCode)).toHaveValue(this.runtimeData.InventoryOrders[`${this.runtimeData.RequestedInventoryDetails.OrderID}`].branchStoreCode, { timeout: 20000 });
 
+		if (!await this.page.locator(InvL.tables.tableAccordianRows).first().isVisible({ timeout: 20000 })) {
+			await this.page.locator(InvL.tables.tableAccordian).click();
+			await expect(this.page.locator(InvL.tables.tableAccordianRows).first()).toBeVisible({ timeout: 20000 });
+		}
+
+		const accountNumber = await this.page.locator(InvL.tables.tableAccordianRows).first().locator('td').nth(1).allTextContents();
 	}
 }

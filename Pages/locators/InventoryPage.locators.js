@@ -1,3 +1,5 @@
+import { table } from "node:console";
+
 export const InventoryPageLocators = {
 
   pageValidator: 'div.box-name span',
@@ -35,7 +37,8 @@ export const InventoryPageLocators = {
     city: '#txtCity',
     zipCode: '#txtZipCode',
     quantity: '#txtOtherQuantity',
-    branchCode: '#txtBranchStoreCode'
+    branchCode: '#txtBranchStoreCode',
+    branchName: '#txtBranchStoreName'
   },
 
   tables: {
@@ -43,7 +46,9 @@ export const InventoryPageLocators = {
     plasticDetailsRows: '#gvPlasticCOdeDetails tbody tr',
     orderGrid: 'div#dgRequestList',
     orderGridTable: 'div#dgRequestList table',
-    orderGridRows: 'div#dgRequestList table tbody tr'
+    orderGridRows: 'div#dgRequestList table tbody tr',
+    tableAccordian: '#dgCardDetailsList_wrapper',
+    tableAccordianRows: '#dgCardDetailsList tbody tr'
   },
 
   order: {

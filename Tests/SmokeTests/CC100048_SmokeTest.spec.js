@@ -1,14 +1,14 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../Pages/LoginPage.spec';
-import { HomePage } from '../Pages/HomePage.spec';
-import { captureStepScreenshot } from '../Pages/utilities/screenshotUtil.spec';
-import { initRuntimeData } from '../Pages/utilities/runtimeDataManager.js';
+import { LoginPage } from '../../Pages/LoginPage.spec.js';
+import { HomePage } from '../../Pages/HomePage.spec';
+import { captureStepScreenshot } from '../../Pages/utilities/screenshotUtil.spec';
+import { initRuntimeData } from '../../Pages/utilities/runtimeDataManager.js';
 
 // import { InventoryPage } from '../Pages/InventoryPage.spec';
 import { InventoryPage } from '../Pages/InventoryPagewithLocs.spec';
 // import { DecisionInventory } from '../Pages/DecisionInventory.spec';
 
-test.only('CC100048_SmokeTest', async ({ page }, testInfo) => {
+test('CC100048_SmokeTest', async ({ page }, testInfo) => {
 	test.setTimeout(180000);
 
 	initRuntimeData(testInfo); // Initialize runtime data with current test info

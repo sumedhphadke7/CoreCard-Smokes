@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../Pages/LoginPage.spec';
-import { HomePage } from '../Pages/HomePage.spec';
-import { captureStepScreenshot } from '../Pages/utilities/screenshotUtil.spec';
+import { LoginPage } from '../../Pages/LoginPage.spec';
+import { HomePage } from '../../Pages/HomePage.spec';
+import { captureStepScreenshot } from '../../Pages/utilities/screenshotUtil.spec';
 
 test('Login to CoreMoney UAT', async ({ page }) => {
 	const sideButton = (name) => page.locator('li a span', { hasText: name });

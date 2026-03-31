@@ -1,0 +1,11 @@
+{
+	"validCredentials": {
+		"username": "sumedh.cc.admin",
+		"password": "Test123!"
+	},
+	"invalidCredentials": {
+		"username": "invalid.user",
+		"password": "WrongPass!"
+	}
+	
+}

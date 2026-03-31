@@ -4,20 +4,50 @@ const { getTimestamp } = require('./GlobalFunctions.spec');
 
 const SCREENSHOT_DIR = path.join(
   process.cwd(),
-  'SmokeTests',
+  'Tests',
   'Screenshots'
 );
 
-if (!fs.existsSync(SCREENSHOT_DIR)) {
-  fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
+// Utility to sanitize any string for filesystem safety
+function sanitize(input) {
+  return input
+    .replace(/[^\w\d]/g, '_')   // replace special chars
+    .replace(/_+/g, '_')        // collapse multiple underscores
+    .replace(/^_+|_+$/g, '');   // trim edges
 }
 
-async function captureStepScreenshot(page, stepName) {
+async function captureStepScreenshot(page, stepName, testInfo) {
+  // Extract spec file name (without extension)
+  const fileName = path.basename(
+    testInfo.file,
+    path.extname(testInfo.file)
+  );
+
+  // Sanitize values
+  const safeTestName = sanitize(testInfo.title);
+  const safeStepName = sanitize(stepName);
+
+  // Retry suffix (only if retry > 0)
+  const retrySuffix = testInfo.retry ? `-retry${testInfo.retry}` : '';
+
+  // Build folder path: Screenshots/<Spec>/<TestName>/
+  const testFolderPath = path.join(
+    SCREENSHOT_DIR,
+    fileName,
+    safeTestName
+  );
+
+  // Ensure directory exists (safe for parallel execution)
+  fs.mkdirSync(testFolderPath, { recursive: true });
+
+  // Final screenshot path
+  const screenshotPath = path.join(
+    testFolderPath,
+    `${safeStepName}${retrySuffix}-${getTimestamp()}.png`
+  );
+
   await page.screenshot({
-    path: path.join(
-      SCREENSHOT_DIR,
-      `${stepName}-${getTimestamp()}.png`
-    ),
+    path: screenshotPath,
     fullPage: true
   });
 }

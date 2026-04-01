@@ -8,7 +8,7 @@ import { LoginPage } from '../../Pages/LoginPage.spec';
 // import { DecisionInventory } from '../Pages/DecisionInventory.spec';
 const testData = require('../TestData/LoginScenarios.json');;
 
-test('Valid @auth, Login with correct credentials', async ({ page }, testInfo) => {
+test('Login with correct credentials', { tag: ['@auth', '@smoke'] } , async ({ page }, testInfo) => {
     test.setTimeout(180000);
     const loginPage = new LoginPage(page)
 
@@ -27,7 +27,7 @@ test('Valid @auth, Login with correct credentials', async ({ page }, testInfo) =
 
 });
 
-test('Invalid @auth, Login with incorrect credentials', async ({ page }, testInfo) => {
+test('Login with incorrect credentials', { tag: ['@auth', '@smoke'] }, async ({ page }, testInfo) => {
     test.setTimeout(180000);
     const loginPage = new LoginPage(page)
 
@@ -43,7 +43,7 @@ test('Invalid @auth, Login with incorrect credentials', async ({ page }, testInf
 
 });
 
-test('Invalid @auth, Login with incorrect password', async ({ page }, testInfo) => {
+test('Login with incorrect password', { tag: ['@auth', '@smoke'] }, async ({ page }, testInfo) => {
     test.setTimeout(180000);
     const loginPage = new LoginPage(page)
 
@@ -59,7 +59,7 @@ test('Invalid @auth, Login with incorrect password', async ({ page }, testInfo) 
 
 });
 
-test.only('Validation @auth, Empty Field Validations', async ({ page }, testInfo) => {
+test('Empty Field Validations', { tag: ['@auth', '@smoke'] }, async ({ page }, testInfo) => {
     test.setTimeout(180000);
     const loginPage = new LoginPage(page)
 
@@ -80,5 +80,48 @@ test.only('Validation @auth, Empty Field Validations', async ({ page }, testInfo
     await captureStepScreenshot(page, 'EmptyPassword', testInfo);
     await expect(page.locator('#username + span.text-danger', {hasText: 'Required!'})).toBeVisible({ timeout: 15000 });
 
+
+});
+
+test('Login with locked user credentials', { tag: ['@auth', '@smoke'] }, async ({ page }, testInfo) => {
+    test.setTimeout(180000);
+    const loginPage = new LoginPage(page)
+
+    await loginPage.navigatePage();
+    await loginPage.userLoginWithCredentials(testData.lockedUser.username, testData.lockedUser.password);
+    if ((await loginPage.sessionError.isVisible())) {
+        await loginPage.userLoginWithCredentials(testData.lockedUser.username, testData.lockedUser.password);
+    }
+    // await waitForAPIRequestAndResponse('UserLogin');
+    await expect(page.locator('div.advertizeHeader')).not.toBeVisible({ timeout: 60000 });
+    await expect(page.locator('#lblErrorMesg', {hasText: 'Your account has been locked. Kindly contact system administrator to activate your account.'})).toBeVisible({ timeout: 15000 });
+    await captureStepScreenshot(page, 'LockedUserLogin', testInfo);
+
+});
+
+test.only('Session Retention on Refresh', { tag: ['@auth', '@smoke'] } , async ({ page }, testInfo) => {
+    test.setTimeout(180000);
+    const loginPage = new LoginPage(page)
+
+    const validateHomePage = page.locator('div.advertizeHeader');
+    await loginPage.navigatePage();
+    await loginPage.userLogin();
+    if ((await loginPage.sessionError.isVisible())) {
+        await loginPage.userLogin();
+    }
+    await page.waitForLoadState('networkidle', { timeout: 60000 });
+    // await waitForAPIRequestAndResponse('UserLogin');
+    await expect(page.locator('div.advertizeHeader')).toBeVisible({ timeout: 60000 });
+    await expect(validateHomePage).toHaveText('Convenient Cards, Inc.', { timeout: 30000 });
+    await validateHomePage.hover();
+    await captureStepScreenshot(page, 'validateHomePage-beforeRefresh', testInfo);
+
+    // Refresh the page
+    await page.reload();
+    await page.waitForLoadState('networkidle', { timeout: 60000 });
+    await expect(page.locator('div.advertizeHeader')).toBeVisible({ timeout: 60000 });
+    await expect(validateHomePage).toHaveText('Convenient Cards, Inc.', { timeout: 30000 });
+    await validateHomePage.hover();
+    await captureStepScreenshot(page, 'validateHomePage-afterRefresh', testInfo);
 
 });

@@ -6,6 +6,9 @@
 	"invalidCredentials": {
 		"username": "invalid.user",
 		"password": "WrongPass!"
-	}
-	
+	},
+	"lockedUser": {
+		"username": "sourabh.cc.admin",
+		"password":"Test123!"
+	}	
 }

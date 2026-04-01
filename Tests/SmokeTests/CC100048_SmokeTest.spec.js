@@ -5,7 +5,7 @@ import { captureStepScreenshot } from '../../Pages/utilities/screenshotUtil.spec
 import { initRuntimeData } from '../../Pages/utilities/runtimeDataManager.js';
 
 // import { InventoryPage } from '../Pages/InventoryPage.spec';
-import { InventoryPage } from '../Pages/InventoryPagewithLocs.spec';
+import { InventoryPage } from '../../Pages/InventoryPagewithLocs.spec.js';
 // import { DecisionInventory } from '../Pages/DecisionInventory.spec';
 
 test('CC100048_SmokeTest', async ({ page }, testInfo) => {

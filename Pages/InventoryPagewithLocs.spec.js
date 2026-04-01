@@ -7,7 +7,7 @@ const { buttonByName, waitForSpinnerToDisappear, validatePage, getInvDashboardPl
 const { captureStepScreenshot } = require('./utilities/screenshotUtil.spec.js');
 // let plasticRowData = require('../SmokeTests/TestData/CC100048_runtime.json');
 
-const testData = require("../SmokeTests/TestData/CC100048_SmokeTest.json");
+const testData = require("../Tests/TestData/CC100048_SmokeTest.json");
 
 export class InventoryPage {
 	constructor(page) {

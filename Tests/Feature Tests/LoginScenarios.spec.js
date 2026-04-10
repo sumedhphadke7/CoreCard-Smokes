@@ -99,7 +99,7 @@ test('Login with locked user credentials', { tag: ['@auth', '@smoke'] }, async (
 
 });
 
-test.only('Session Retention on Refresh', { tag: ['@auth', '@smoke'] } , async ({ page }, testInfo) => {
+test('Session Retention on Refresh', { tag: ['@auth', '@smoke'] } , async ({ page }, testInfo) => {
     test.setTimeout(180000);
     const loginPage = new LoginPage(page)
 

@@ -1,0 +1,4 @@
+{
+    "generateToken": "https://testppwebapis.corecard.com/token",
+    "viewDDA": "https://testppwebapis.corecard.com/api/ViewDDA"
+}

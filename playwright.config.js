@@ -22,7 +22,7 @@ export default defineConfig({
       name: 'UI - Webkit',
       testDir: './Tests',
       use: {
-        ...devices['Desktop Safari'],
+        ...devices['Desktop Chrome'],
       },
     },
 

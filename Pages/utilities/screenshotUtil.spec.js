@@ -17,6 +17,11 @@ function sanitize(input) {
 }
 
 async function captureStepScreenshot(page, stepName, testInfo) {
+
+  if (!testInfo || !testInfo.file) {
+    throw new Error('testInfo is undefined. Ensure it is passed from the test.');
+  }
+  
   // Extract spec file name (without extension)
   const fileName = path.basename(
     testInfo.file,

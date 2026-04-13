@@ -32,7 +32,7 @@ test('CC100048_SmokeTest', async ({ page }, testInfo) => {
 	await expect(page.locator('div.advertizeHeader')).toBeVisible({ timeout: 60000 });
 	await expect(validateHomePage).toHaveText('Convenient Cards, Inc.', { timeout: 30000 });
 	await validateHomePage.hover();
-	await captureStepScreenshot(page, 'validateHomePage');
+	await captureStepScreenshot(page, testInfo, 'validateHomePage');
 
 
 	/*  turn this block off for faster execution  

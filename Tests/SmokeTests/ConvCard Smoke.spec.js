@@ -3,7 +3,7 @@ import { LoginPage } from '../../Pages/LoginPage.spec';
 import { HomePage } from '../../Pages/HomePage.spec';
 import { captureStepScreenshot } from '../../Pages/utilities/screenshotUtil.spec';
 
-test('Login to CoreMoney UAT', async ({ page }) => {
+test('Login to CoreMoney UAT', async ({ page }, testInfo) => {
 	const sideButton = (name) => page.locator('li a span', { hasText: name });
 	const validateHomePage = page.locator('div.advertizeHeader');
 
@@ -21,7 +21,7 @@ test('Login to CoreMoney UAT', async ({ page }) => {
 	await expect(page.locator('div.advertizeHeader')).toBeVisible({ timeout: 60000 });
 	await expect(validateHomePage).toHaveText('Convenient Cards, Inc.');
 	await validateHomePage.hover();
-	await captureStepScreenshot(page, 'validateHomePage');
+	await captureStepScreenshot(page, testInfo, 'validateHomePage');
 
 	//User login block end
 

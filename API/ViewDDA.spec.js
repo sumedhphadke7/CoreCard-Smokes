@@ -1,15 +1,18 @@
 import {test, expect} from '@playwright/test';
 import apiEndpoints from './APIendpoints.json';
-import apiCreds from './APIcredentials.json'
+import apiCreds from './APIcredentials.json';
+import { generateToken as token } from './generateToken.spec';
+
+let bearerToken;
 
 test.beforeAll(async ( {request} ) => {
-    const response = await request.post(apiEndpoints.generateToken, {data: {username: apiCreds.grit.username, password: apiCreds.grit.password}});
-    
-    console.log(response.status());
-    console.log(response.headers());
+    console.log('Generating token before all tests');
+    bearerToken = await token({request});
 });
 
-// test("Test ViewDDA API", async ( {request} ) => {
-//     await request.post(apiEndpoints.viewDDA, {
-//     })
-// })
+test("Test ViewDDA API", async ( {request} ) => {
+    expect(bearerToken).toBeTruthy();
+    console.log('Yet to write any tests for viewDDA API');
+    // await request.post(apiEndpoints.viewDDA, {
+    // })
+})

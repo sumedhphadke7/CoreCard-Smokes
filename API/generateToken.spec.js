@@ -15,6 +15,26 @@ import apiCreds from './APIcredentials.json';
 // 	})
 // })
 
+export async function generateToken({ request }) {
+	const response = await request.post(
+		apiEndpoints.generateToken, {
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded'
+		},
+		form: {
+			username: apiCreds.grit.username,
+			password: apiCreds.grit.password,
+			grant_type: 'password',
+			IPAddress: '::1',
+			APIVersion: '1.3',
+			Source: 'web'
+		}
+	}
+	);
+	const respBody = await response.json();
+	return await respBody.access_token;
+}
+
 test('Generate Token API', async ({ request }) => {
 	console.log(apiEndpoints.generateToken);
 	console.log(apiCreds.grit.username);
@@ -42,6 +62,8 @@ test('Generate Token API', async ({ request }) => {
 
 	console.log('Your access token also known as the bearer token is:\n', responseBody.access_token);
 	expect(response.status()).toBe(200);
+
+	return responseBody.access_token;
 
 });
 

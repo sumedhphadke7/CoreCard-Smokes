@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import apiEndpoints from './APIendpoints.json';
-import { generateAuthToken } from './globalAPIfunctions.spec.js';
+import { generateAuthToken } from './utilities/globalAPIfunctions.js';
 
 let bearerToken;
 

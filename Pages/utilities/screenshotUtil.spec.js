@@ -16,7 +16,7 @@ function sanitize(input) {
     .replace(/^_+|_+$/g, '');   // trim edges
 }
 
-async function captureStepScreenshot(page, stepName, testInfo) {
+async function captureStepScreenshot({ page, testInfo, stepName }) {
 
   if (!testInfo || !testInfo.file) {
     throw new Error('testInfo is undefined. Ensure it is passed from the test.');

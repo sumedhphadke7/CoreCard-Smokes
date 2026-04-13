@@ -1,0 +1,19 @@
+Generating token before all tests
+eyJhbGciOiJSUzI1NiIsImtpZCI6IjgtejJKNjNVSUFSYlZmMG1IcGJNNjMtYWtNa1JVam01S2xHZmdpRDVCRE0iLCJ0eXAiOiJKV1QifQ.eyJUb2tlblR5cGUiOiJBY2Nlc3NUb2tlbiIsIlVzZXJJRCI6ImdyaXRwIiwic291cmNlSUQiOiJDb3JlQ2FyZCIsInJvbGVzX2xpc3QiOlsiZ3JpdHAiXSwidW5pcXVlX25hbWUiOiJncml0cCIsIkF1dGhIZWFkZXIiOiJGRTQwNzI4RjBFNDA0NTgyODMyMTkwRkI1MEJENzJCMzcwM0UzMzQ0NCIsIm5iZiI6MTc3NjA4MDQwNywiZXhwIjoxNzc2MTM0NDA5LCJpYXQiOjE3NzYwODA0MDd9.PVRyEnLQI9F-5ELpT88KmVYjs62YVemzTydKc0lZH1CmVnfArqa2ZIpO0LyDIFqLGE-RePgW0rH7zb_DGaitRZ1vA-qWGgH5KqNlFsIDp64qXUAcKibsc4nFKWjhVctomyXh8jQLvtmmKFi3c_tEHVuAeGZAGrKRJnMkb_5TJH9vifFuI8Q0YFviILGsZoqT2QrX_saNci3CE0YYTWp7EqoPY87ki5bXQC5_lUBb0VFEQG9Fvq31Pbu0UgxsukPULwJtaO3nFfcpRJbzBEwSWwAkyJheh8UkIC-r9oIPYsKjfHm9c1Zx6mVR51Q1GadiA06Z8_APTEW-WgDlxMUr-g
+{
+  Message: 'Successful.',
+  Status: true,
+  ErrorCode: '00000',
+  ResponseData: {
+    DDANumber: '633594549797',
+    RoutingNumber: '026073150',
+    FirstName: 'Sumedh',
+    LastName: 'GritCardOne',
+    City: 'Miami',
+    ZipCode: '32123',
+    Country: 'US',
+    NameofInstitution: 'Community Federal Savings Bank - GRIT',
+    AddressLine1: '101 UAT Grit API',
+    AddressLine2: '201 UAT testing'
+  }
+}

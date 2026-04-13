@@ -23,7 +23,7 @@ test('Login with correct credentials', { tag: ['@auth', '@smoke'] } , async ({ p
     await expect(page.locator('div.advertizeHeader')).toBeVisible({ timeout: 60000 });
     await expect(validateHomePage).toHaveText('Convenient Cards, Inc.', { timeout: 30000 });
     await validateHomePage.hover();
-    await captureStepScreenshot(page, 'validateHomePage', testInfo);
+    await captureStepScreenshot( {page, testInfo, stepName: 'validateHomePage'} );
 });
 
 test('Login with incorrect credentials', { tag: ['@auth', '@smoke'] }, async ({ page }, testInfo) => {
@@ -38,7 +38,7 @@ test('Login with incorrect credentials', { tag: ['@auth', '@smoke'] }, async ({ 
     // await waitForAPIRequestAndResponse('UserLogin');
     await expect(page.locator('div.advertizeHeader')).not.toBeVisible({ timeout: 60000 });
     await expect(page.locator('#lblErrorMesg', {hasText: 'Login failed. Please check your User Name and Access Code.'})).toBeVisible({ timeout: 15000 });
-    await captureStepScreenshot(page, 'InvalidLogin', testInfo);
+    await captureStepScreenshot( {page, testInfo, stepName: 'InvalidLogin'} );
 });
 
 test('Login with incorrect password', { tag: ['@auth', '@smoke'] }, async ({ page }, testInfo) => {
@@ -53,7 +53,7 @@ test('Login with incorrect password', { tag: ['@auth', '@smoke'] }, async ({ pag
     // await waitForAPIRequestAndResponse('UserLogin');
     await expect(page.locator('div.advertizeHeader')).not.toBeVisible({ timeout: 60000 });
     await expect(page.locator('#lblErrorMesg', {hasText: 'Login failed. Please check your User Name and Access Code.'})).toBeVisible({ timeout: 15000 });
-    await captureStepScreenshot(page, 'InvalidLogin', testInfo);
+    await captureStepScreenshot( {page, testInfo, stepName: 'InvalidPassword'} );
 });
 
 test('Empty Field Validations', { tag: ['@auth', '@smoke'] }, async ({ page }, testInfo) => {
@@ -63,18 +63,18 @@ test('Empty Field Validations', { tag: ['@auth', '@smoke'] }, async ({ page }, t
     await loginPage.navigatePage();
 
     await loginPage.userLoginWithCredentials('', '');
-    await captureStepScreenshot(page, 'EmptyUsername', testInfo);
+    await captureStepScreenshot( {page, testInfo, stepName: 'EmptyFields'} );
     await expect(page.locator('#username + span.text-danger', {hasText: 'Required!'})).toBeVisible({ timeout: 15000 });
     await expect(page.locator('#password + span.text-danger', {hasText: 'Required!'})).toBeVisible({ timeout: 15000 });
     await page.reload();
 
     await loginPage.userLoginWithCredentials('username', '');
-    await captureStepScreenshot(page, 'EmptyUsername', testInfo);
+    await captureStepScreenshot( {page, testInfo, stepName: 'EmptyUsername'} );
     await expect(page.locator('#password + span.text-danger', {hasText: 'Required!'})).toBeVisible({ timeout: 15000 });
     await page.reload();
     
     await loginPage.userLoginWithCredentials('', 'password');
-    await captureStepScreenshot(page, 'EmptyPassword', testInfo);
+    await captureStepScreenshot( {page, testInfo, stepName: 'EmptyPassword'} );
     await expect(page.locator('#username + span.text-danger', {hasText: 'Required!'})).toBeVisible({ timeout: 15000 });
 });
 
@@ -90,7 +90,7 @@ test('Login with locked user credentials', { tag: ['@auth', '@smoke'] }, async (
     // await waitForAPIRequestAndResponse('UserLogin');
     await expect(page.locator('div.advertizeHeader')).not.toBeVisible({ timeout: 60000 });
     await expect(page.locator('#lblErrorMesg', {hasText: 'Your account has been locked. Kindly contact system administrator to activate your account.'})).toBeVisible({ timeout: 15000 });
-    await captureStepScreenshot(page, 'LockedUserLogin', testInfo);
+    await captureStepScreenshot( {page, testInfo, stepName: 'LockedUserLogin'} );
 });
 
 test('Session Retention on Refresh', { tag: ['@auth', '@smoke'] } , async ({ page }, testInfo) => {
@@ -108,7 +108,7 @@ test('Session Retention on Refresh', { tag: ['@auth', '@smoke'] } , async ({ pag
     await expect(page.locator('div.advertizeHeader')).toBeVisible({ timeout: 60000 });
     await expect(validateHomePage).toHaveText('Convenient Cards, Inc.', { timeout: 30000 });
     await validateHomePage.hover();
-    await captureStepScreenshot(page, 'validateHomePage-beforeRefresh', testInfo);
+    await captureStepScreenshot( {page, testInfo, stepName: 'validateHomePage-beforeRefresh'} );
 
     // Refresh the page
     await page.reload();
@@ -116,5 +116,5 @@ test('Session Retention on Refresh', { tag: ['@auth', '@smoke'] } , async ({ pag
     await expect(page.locator('div.advertizeHeader')).toBeVisible({ timeout: 60000 });
     await expect(validateHomePage).toHaveText('Convenient Cards, Inc.', { timeout: 30000 });
     await validateHomePage.hover();
-    await captureStepScreenshot(page, 'validateHomePage-afterRefresh', testInfo);
+    await captureStepScreenshot( {page, testInfo, stepName: 'validateHomePage-afterRefresh'} );
 });

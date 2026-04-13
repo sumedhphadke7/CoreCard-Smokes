@@ -1,5 +1,5 @@
-import apiEndpoints from './APIendpoints.json' assert { type: 'json' };
-import apiCreds from './APIcredentials.json' assert { type: 'json' };
+import apiEndpoints from '../APIendpoints.json' assert { type: 'json' };
+import apiCreds from '../APIcredentials.json' assert { type: 'json' };
 
 export async function generateAuthToken({ request }, client) {
 

@@ -24,7 +24,6 @@ test('Login with correct credentials', { tag: ['@auth', '@smoke'] } , async ({ p
     await expect(validateHomePage).toHaveText('Convenient Cards, Inc.', { timeout: 30000 });
     await validateHomePage.hover();
     await captureStepScreenshot(page, 'validateHomePage', testInfo);
-
 });
 
 test('Login with incorrect credentials', { tag: ['@auth', '@smoke'] }, async ({ page }, testInfo) => {
@@ -40,7 +39,6 @@ test('Login with incorrect credentials', { tag: ['@auth', '@smoke'] }, async ({ 
     await expect(page.locator('div.advertizeHeader')).not.toBeVisible({ timeout: 60000 });
     await expect(page.locator('#lblErrorMesg', {hasText: 'Login failed. Please check your User Name and Access Code.'})).toBeVisible({ timeout: 15000 });
     await captureStepScreenshot(page, 'InvalidLogin', testInfo);
-
 });
 
 test('Login with incorrect password', { tag: ['@auth', '@smoke'] }, async ({ page }, testInfo) => {
@@ -56,7 +54,6 @@ test('Login with incorrect password', { tag: ['@auth', '@smoke'] }, async ({ pag
     await expect(page.locator('div.advertizeHeader')).not.toBeVisible({ timeout: 60000 });
     await expect(page.locator('#lblErrorMesg', {hasText: 'Login failed. Please check your User Name and Access Code.'})).toBeVisible({ timeout: 15000 });
     await captureStepScreenshot(page, 'InvalidLogin', testInfo);
-
 });
 
 test('Empty Field Validations', { tag: ['@auth', '@smoke'] }, async ({ page }, testInfo) => {
@@ -79,8 +76,6 @@ test('Empty Field Validations', { tag: ['@auth', '@smoke'] }, async ({ page }, t
     await loginPage.userLoginWithCredentials('', 'password');
     await captureStepScreenshot(page, 'EmptyPassword', testInfo);
     await expect(page.locator('#username + span.text-danger', {hasText: 'Required!'})).toBeVisible({ timeout: 15000 });
-
-
 });
 
 test('Login with locked user credentials', { tag: ['@auth', '@smoke'] }, async ({ page }, testInfo) => {
@@ -96,7 +91,6 @@ test('Login with locked user credentials', { tag: ['@auth', '@smoke'] }, async (
     await expect(page.locator('div.advertizeHeader')).not.toBeVisible({ timeout: 60000 });
     await expect(page.locator('#lblErrorMesg', {hasText: 'Your account has been locked. Kindly contact system administrator to activate your account.'})).toBeVisible({ timeout: 15000 });
     await captureStepScreenshot(page, 'LockedUserLogin', testInfo);
-
 });
 
 test('Session Retention on Refresh', { tag: ['@auth', '@smoke'] } , async ({ page }, testInfo) => {
@@ -123,5 +117,4 @@ test('Session Retention on Refresh', { tag: ['@auth', '@smoke'] } , async ({ pag
     await expect(validateHomePage).toHaveText('Convenient Cards, Inc.', { timeout: 30000 });
     await validateHomePage.hover();
     await captureStepScreenshot(page, 'validateHomePage-afterRefresh', testInfo);
-
 });

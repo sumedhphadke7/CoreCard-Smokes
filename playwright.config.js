@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig, devices } from '@playwright/test';
+import path from 'path';
 
 /**
  * Read environment variables from file.
@@ -23,6 +24,7 @@ export default defineConfig({
 			testDir: './Tests',
 			use: {
 				...devices['Desktop Chrome'],
+				testDataDir: path.resolve(__dirname, 'Tests', 'TestData'),
 			},
 		},
 

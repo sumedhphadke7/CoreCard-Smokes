@@ -7,7 +7,7 @@ const { buttonByName, waitForSpinnerToDisappear, validatePage, getInvDashboardPl
 const { captureStepScreenshot } = require('./utilities/screenshotUtil.spec.js');
 // let plasticRowData = require('../SmokeTests/TestData/CC100048_runtime.json');
 
-const testData = require("../Tests/TestData/CC100048_SmokeTest.json");
+const testData = require('../Tests/TestData/SmokeTests/CC100048_SmokeTest.json');  //"../Tests/TestData/SmokeTests/CC100048_SmokeTest.json"
 
 export class InventoryPage {
 	constructor(page) {
@@ -62,7 +62,7 @@ export class InventoryPage {
 		await expect(this.page.locator(InvL.tables.orderGrid)).toBeVisible({ timeout: 25000 });
 		await expect(this.page.getByRole('button', { name: 'Decision Inventory' })).toBeDisabled({ timeout: 10000 });
 		const orderRowData = await extractRowData(InvL.tables.orderGridRows, this.runtimeData.RequestedInventoryDetails.OrderID);
-		await captureStepScreenshot(this.page, 'SearchInventoryByOrderID');
+		await captureStepScreenshot( {page: this.page, testInfo, stepName: 'SearchInventoryByOrderID'} );
 		console.log(orderRowData);
 		updateRuntimeKey(`InventoryOrders.${this.runtimeData.RequestedInventoryDetails.OrderID}`, orderRowData);
 		await this.page.locator(InvL.tables.orderGridRows).filter({
@@ -136,14 +136,14 @@ export class InventoryPage {
 
 		await expect(this.rows.last()).toBeVisible();
 
-		await captureStepScreenshot(this.page, 'ValidateInventoryDashboard');
+		await captureStepScreenshot( {page: this.page, testInfo, stepName: 'ValidateInventoryDashboard'} );
 
 	}
 
 	async InventoryTableProductSearch(testInfo) {
 		await this.page.locator('div#gvInventoryStatus input').pressSequentially(this.InventoryDashboardData.productName);
 		// await this.page.locator('input[aria-controls="DataTables_Table_0"]').fill(productName);
-		await captureStepScreenshot(this.page, `ValidateInventoryProduct-${this.InventoryDashboardData.productName}`);
+		await captureStepScreenshot( {page: this.page, testInfo, stepName: `ValidateInventoryProduct-${this.InventoryDashboardData.productName}`} );
 		const plasticRowData = await getInvDashboardPlasticRowData(this.InventoryDashboardData.plasticCode);
 		console.log(plasticRowData);
 		updateRuntimeKey('plasticRowData', plasticRowData);
@@ -172,7 +172,7 @@ export class InventoryPage {
 		await expect(this.page.locator(InvL.buttons.nextOrder)).toBeDisabled();
 		await expect(this.page.locator(InvL.buttons.decisionInventory)).toBeDisabled();
 
-		await captureStepScreenshot(this.page, 'RequestInventoryForm');
+		await captureStepScreenshot( {page: this.page, testInfo, stepName: 'RequestInventoryForm'} );
 		await this.page.locator(InvL.dropdowns.branch).click();
 		await this.page.locator(InvL.dropdowns.branchInput).pressSequentially(this.InventoryDashboardData.branchName, { delay: 200 });
 		await this.page.getByRole('option', { name: new RegExp(this.InventoryDashboardData.branchName, 'i') }).click();
@@ -228,7 +228,7 @@ export class InventoryPage {
 		// await expect(requestInventoryRowData[0]).toHaveValue(this.inventoryDetails.plasticCode, { timeout: 20000 });
 		// await expect(requestInventoryRowData[2]).toHaveValue(this.inventoryDetails.quantity, { timeout: 20000 });
 
-		await captureStepScreenshot(this.page, 'FilledRequestInventoryForm');
+		await captureStepScreenshot( {page: this.page, testInfo, stepName: 'FilledRequestInventoryForm'});
 
 		await expect(ReqInvTablecells.first()).toBeVisible();
 		await expect(ReqInvTablecells.nth(1)).toContainText(`${this.runtimeData.InventoryRequestorDetails.plasticCode}`);
@@ -280,7 +280,7 @@ export class InventoryPage {
 			expectedBody: 'Processed Successfully.',
 			buttonName: 'Close'
 		});
-		await captureStepScreenshot(this.page, 'ApprovedInventoryRequest');
+		await captureStepScreenshot( {page: this.page, testInfo, stepName: 'ApprovedInventoryRequest'} );
 		updateRuntimeKey(`InventoryOrders.${orderId}.cardStatus`, "Approved");
 	}
 

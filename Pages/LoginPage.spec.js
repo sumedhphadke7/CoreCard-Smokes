@@ -1,4 +1,4 @@
-const testData = require('../Tests/TestData/CC100048_SmokeTest.json');  //Tests/TestData/CC100048_SmokeTest.json
+const testData = require('../Tests/TestData/SmokeTests/CC100048_SmokeTest.json');  //Tests/TestData/CC100048_SmokeTest.json
 import { expect } from '@playwright/test';
 import { PORTAL_URL } from './utilities/environment.js'
 
@@ -13,7 +13,7 @@ export class LoginPage {
 	}
 
 	async navigatePage() {
-		await this.page.goto(PORTAL_URL, { waitUntil: 'domcontentloaded', timeout: 20000 });
+		await this.page.goto(PORTAL_URL, { waitUntil: 'domcontentloaded', timeout: 45000 });
 		// await this.page.goto('https://testcoremoney.corecard.com/LoginManagement/Login/Login');
 		await this.page.waitForLoadState('networkidle');
 		// await this.page.reload();

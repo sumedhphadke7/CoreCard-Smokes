@@ -6,7 +6,7 @@ import { LoginPage } from '../../Pages/LoginPage.spec';
 // import { InventoryPage } from '../Pages/InventoryPage.spec';
 // import { InventoryPage } from '../Pages/InventoryPagewithLocs.spec';
 // import { DecisionInventory } from '../Pages/DecisionInventory.spec';
-const testData = require('../TestData/LoginScenarios.json');;
+const testData = require('../TestData/FeatureTests/LoginScenarios.json');
 
 test('Login with correct credentials', { tag: ['@auth', '@smoke'] } , async ({ page }, testInfo) => {
     test.setTimeout(180000);

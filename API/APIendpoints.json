@@ -1,5 +1,6 @@
 {
     "additionalCardDetails": "/api/GetAdditionalCardDetails2",
+    "accountCreation": "/api/AccountCreation",
     "generateToken": "/token",
     "viewDDA": "/api/ViewDDA"
 }

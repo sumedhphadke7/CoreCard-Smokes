@@ -1,31 +1,12 @@
 import { test, expect } from '@playwright/test';
-import apiEndpoints from './APIendpoints.json';
 import { generateAuthToken } from './utilities/globalAPIfunctions.js';
+import { postViewDDA } from './apicalls/postViewDDA.api.js';
 
 let bearerToken;
 
-async function postViewDDA(request, token, overrides = {}) {
-	const defaultPayload = {
-		APIVersion: "1.3", IPAddress: "10.206.2.197", Source: "WEB", CallerID: "", CalledID: "", SessionID: "", ANI: "", DNS: "",
-		Language: "en", RequestDate: "", CardNumber: "", ProxyNumber: ""
-	};
-	console.log(token);
-
-	const payload = { ...defaultPayload, ...overrides };
-	const response = await request.post(apiEndpoints.viewDDA, {
-		headers: {
-			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${token}`
-		},
-		data: payload,
-	});
-
-	return await response;
-}
-
-test.beforeAll(async ({ request }) => {
+test.beforeAll(async () => {
 	console.log('Generating token before all tests');
-	bearerToken = await generateAuthToken({ request }, 'grit');
+	bearerToken = await generateAuthToken('grit');
 });
 
 test("Valid ViewDDA API call", async ({ request }) => {

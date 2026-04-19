@@ -1,6 +1,6 @@
-const testData = require('../Tests/TestData/SmokeTests/CC100048_SmokeTest.json');  //Tests/TestData/CC100048_SmokeTest.json
+const testData = require('../../Tests/TestData/SmokeTests/CC100048_SmokeTest.json');  //Tests/TestData/CC100048_SmokeTest.json
 import { expect } from '@playwright/test';
-import { PORTAL_URL } from './utilities/environment.js'
+import { PORTAL_URL } from '../utilities/environment.js'
 
 export class LoginPage {
 	constructor(page) {

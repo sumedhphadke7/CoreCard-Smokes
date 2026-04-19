@@ -1,13 +1,13 @@
 const { expect } = require('@playwright/test');
-import { getRuntimeData, updateRuntimeKey, createRuntimeAccount } from './utilities/runtimeDataManager.js';
-import { InventoryPageLocators as InvL } from './locators/InventoryPage.locators.js';
-import { handleModal } from './utilities/simpleModalHandler.spec.js';
+import { getRuntimeData, updateRuntimeKey, createRuntimeAccount } from '../utilities/runtimeDataManager.js';
+import { InventoryPageLocators as InvL } from '../locators/CoreMoney/InventoryPage.locators.js';
+import { handleModal } from '../utilities/simpleModalHandler.spec.js';
 
-const { buttonByName, waitForSpinnerToDisappear, validatePage, getInvDashboardPlasticRowData, getTimestamp, extractRowData } = require('./utilities/GlobalFunctions.spec.js');
-const { captureStepScreenshot } = require('./utilities/screenshotUtil.spec.js');
+const { buttonByName, waitForSpinnerToDisappear, validatePage, getInvDashboardPlasticRowData, getTimestamp, extractRowData } = require('../utilities/GlobalFunctions.spec.js');
+const { captureStepScreenshot } = require('../utilities/screenshotUtil.spec.js');
 // let plasticRowData = require('../SmokeTests/TestData/CC100048_runtime.json');
 
-const testData = require('../Tests/TestData/SmokeTests/CC100048_SmokeTest.json');  //"../Tests/TestData/SmokeTests/CC100048_SmokeTest.json"
+const testData = require('../../Tests/TestData/SmokeTests/CC100048_SmokeTest.json');  //"../Tests/TestData/SmokeTests/CC100048_SmokeTest.json"
 
 export class InventoryPage {
 	constructor(page) {

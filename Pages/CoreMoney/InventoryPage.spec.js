@@ -1,12 +1,12 @@
-import { updateRuntimeKey } from './utilities/runtimeDataManager';
+import { updateRuntimeKey } from '../utilities/runtimeDataManager.js';
 
 const { expect } = require('@playwright/test');
-const { buttonByName, waitForSpinnerToDisappear, validatePage, getInvDashboardPlasticRowData, getTimestamp } = require('../Pages/utilities/GlobalFunctions.spec');
-const { captureStepScreenshot } = require('../Pages/utilities/screenshotUtil.spec');
+const { buttonByName, waitForSpinnerToDisappear, validatePage, getInvDashboardPlasticRowData, getTimestamp } = require('../utilities/GlobalFunctions.spec.js');
+const { captureStepScreenshot } = require('../utilities/screenshotUtil.spec.js');
 // let plasticRowData = require('../SmokeTests/TestData/CC100048_runtime.json');
 const testData = require("../SmokeTests/TestData/CC100048_SmokeTest.json");
 const runtimeData = require('../SmokeTests/TestData/CC100048_runtime.json');
-import { handleModal } from './utilities/simpleModalHandler.spec.js';
+import { handleModal } from '../utilities/simpleModalHandler.spec.js';
 
 export class InventoryPage {
 	constructor(page) {

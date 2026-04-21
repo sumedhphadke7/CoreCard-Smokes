@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { captureStepScreenshot } from '../../Pages/utilities/screenshotUtil.spec';
 import { initRuntimeData } from '../../Pages/utilities/runtimeDataManager'; //Pages/utilities/runtimeDataManager.js
-import { LoginPage } from '../../Pages/LoginPage.spec';
+import { LoginPage } from '../../Pages/CoreMoney/LoginPage.spec';
 
 // import { InventoryPage } from '../Pages/InventoryPage.spec';
 // import { InventoryPage } from '../Pages/InventoryPagewithLocs.spec';

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { generateAuthToken } from '../../../API/utilities/globalAPIfunctions.js'; // ../../../API/utilities/globalAPIfunctions.js
-import { postViewDDA } from '../../../API/apicalls/postViewDDA.api.js';
+import { generateAuthToken } from '../../API/utilities/globalAPIfunctions.js'; // ../../../API/utilities/globalAPIfunctions.js
+import { postViewDDA } from '../../API/apicalls/postViewDDA.api.js';
 
 let bearerToken;
 

@@ -1,14 +1,14 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../../Pages/LoginPage.spec.js';
-import { HomePage } from '../../Pages/HomePage.spec';
+import { LoginPage } from '../../Pages/CoreMoney/LoginPage.spec.js';
+import { HomePage } from '../../Pages/CoreMoney/HomePage.spec.js';
 import { captureStepScreenshot } from '../../Pages/utilities/screenshotUtil.spec';
 import { initRuntimeData } from '../../Pages/utilities/runtimeDataManager.js';
 
 // import { InventoryPage } from '../Pages/InventoryPage.spec';
-import { InventoryPage } from '../../Pages/InventoryPagewithLocs.spec.js';
+import { InventoryPage } from '../../Pages/CoreMoney/InventoryPagewithLocs.spec.js';
 // import { DecisionInventory } from '../Pages/DecisionInventory.spec';
 
-test('CC100048_SmokeTest', async ({ page }, testInfo) => {
+test.only('CC100048_SmokeTest', async ({ page }, testInfo) => {
 	test.setTimeout(180000);
 
 	initRuntimeData(testInfo); // Initialize runtime data with current test info
@@ -32,16 +32,16 @@ test('CC100048_SmokeTest', async ({ page }, testInfo) => {
 	await expect(page.locator('div.advertizeHeader')).toBeVisible({ timeout: 60000 });
 	await expect(validateHomePage).toHaveText('Convenient Cards, Inc.', { timeout: 30000 });
 	await validateHomePage.hover();
-	await captureStepScreenshot( {page, testInfo, stepName: 'validateHomePage'} );
+	await captureStepScreenshot( {page, stepName: 'validateHomePage'}, testInfo );
 
 
-	/*  turn this block off for faster execution  
+	//  turn this block off for faster execution  
 
 	// Navigate to Inventory Dashboard & fetch data
 	await homePage.navToManageInventoryPage();
 	// await inventoryPage.inventoryDashboard();
 	// await inventoryPage.inventoryDashboard("FIRST CENTURY BANK", "CC0001");
-	await inventoryPage.inventoryDashboard();
+	await inventoryPage.inventoryDashboard(testInfo);
 	await inventoryPage.InventoryTableProductSearch(testInfo);
 	await sideButton('Home').click();
 
@@ -56,7 +56,7 @@ test('CC100048_SmokeTest', async ({ page }, testInfo) => {
 	await inventoryPage.decisionInventory(testInfo);
 	await sideButton('Home').click();
 
-	*/
+	
 	await homePage.navToManageInventoryPage();
 	await inventoryPage.navToSearchInventory();
 	await inventoryPage.searchInventorybyOrderID(testInfo);

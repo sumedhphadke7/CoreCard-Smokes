@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../../Pages/LoginPage.spec';
-import { HomePage } from '../../Pages/HomePage.spec';
+import { LoginPage } from '../../Pages/CoreMoney/LoginPage.spec';
+import { HomePage } from '../../Pages/CoreMoney/HomePage.spec';
 import { captureStepScreenshot } from '../../Pages/utilities/screenshotUtil.spec';
 
 test('ConvCard Smoke Test', async ({ page }, testInfo) => {

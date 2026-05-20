@@ -1,7 +1,12 @@
 {
-	"credentials": {
+	"cm_credentials": {
 		"username": "sumedh.cc.admin",
 		"password": "Test12345!"
+	},
+	
+	"ci_credentials": {
+		"username": "sumedh_ci",
+		"password": "Test123!"
 	},
 	
 	"InventoryDashboardData": {

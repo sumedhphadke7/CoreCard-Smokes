@@ -47,6 +47,7 @@ export const InventoryPageLocators = {
     orderGrid: 'div#dgRequestList',
     orderGridTable: 'div#dgRequestList table',
     orderGridRows: 'div#dgRequestList table tbody tr',
+    accordianExpandButton: '#pnlSettledPostTransaction',
     tableAccordian: '#dgCardDetailsList_wrapper',
     tableAccordianRows: '#dgCardDetailsList tbody tr'
   },

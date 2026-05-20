@@ -1,6 +1,6 @@
 const apiEndpoints = require('../APIendpoints.json');
 
-async function postAccountCreation(apiContext, token, overrides = {}) {
+async function postAccountCreation(request, token, overrides = {}) {
 	const defaultPayload = {
 		APIVersion: "1.4", IPAddress: "10.206.2.197", Source: "WEB",
 		AccountCreationMethod: "1", BranchCode: "00001", ProductID: "5044",
@@ -20,7 +20,7 @@ async function postAccountCreation(apiContext, token, overrides = {}) {
 
 	const payload = { ...defaultPayload, ...overrides };
 
-	return await apiContext.post(apiEndpoints.accountCreation, {
+	return await request.post(apiEndpoints.accountCreation, {
 		headers: {
 			'Content-Type': 'application/json',
 			'Authorization': `Bearer ${token}`

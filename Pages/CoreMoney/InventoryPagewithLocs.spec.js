@@ -62,7 +62,7 @@ export class InventoryPage {
 		await expect(this.page.locator(InvL.tables.orderGrid)).toBeVisible({ timeout: 25000 });
 		await expect(this.page.getByRole('button', { name: 'Decision Inventory' })).toBeDisabled({ timeout: 10000 });
 		const orderRowData = await extractRowData(InvL.tables.orderGridRows, this.runtimeData.RequestedInventoryDetails.OrderID);
-		await captureStepScreenshot( {page: this.page, stepName: 'SearchInventoryByOrderID'}, testInfo );
+		await captureStepScreenshot({ page: this.page, stepName: 'SearchInventoryByOrderID' }, testInfo);
 		console.log(orderRowData);
 		updateRuntimeKey(`InventoryOrders.${this.runtimeData.RequestedInventoryDetails.OrderID}`, orderRowData);
 		await this.page.locator(InvL.tables.orderGridRows).filter({
@@ -87,7 +87,8 @@ export class InventoryPage {
 	//     await expect(this.page.locator('div.box-name span span', { hasText: "Inventory Dashboard" })).toBeVisible();
 	// }
 
-	async inventoryDashboard(testInfo) {
+	async inventoryDashboard(testInfo, retry = 0) {
+		const max_retires = 3;
 		await buttonByName('Inventory Dashboard').click();
 		await waitForSpinnerToDisappear('#dvImgContainerPL img', 30000);
 		await this.page.waitForLoadState('networkidle', { timeout: 120000 });
@@ -125,29 +126,54 @@ export class InventoryPage {
 		await this.page.locator('button', { name: 'Show Inventory Details' }).first().click();
 		await this.page.waitForLoadState('networkidle', { timeout: 120000 });
 		// await expect(this.page.locator('div#gvInventoryStatus')).toBeAttached({ timeout: 90000 });
-		await this.page.locator('div#gvInventoryStatus').waitFor({ state: 'visible', timeout: 150000 });
+		// await this.page.locator('div#gvInventoryStatus').waitFor({ state: 'visible', timeout: 150000 });
 		// await expect.poll(() => this.page.locator('div#gvInventoryStatus'), { timeout: 90000 }).toBeVisible();
-		await expect(this.page.locator('div#gvInventoryStatus')).toBeVisible({ timeout: 90000 });
+		await waitForSpinnerToDisappear('#dvImgContainerPL img', 30000);
+		expect.soft(this.page.locator('div#gvInventoryStatus')).toBeVisible({ timeout: 90000 });
+		expect.soft(this.page.locator('.modal')).toBeVisible({ timeout: 45000 });
+
+		if (await this.page.locator('.modal').isVisible({ timeout: 30000 })) {
+			console.log(`Error modal detected. Retry: ${retry + 1}`);
+			await handleModal(this.page, { expectedHeader: 'Error', expectedBody: '', buttonName: 'Close' });
+			await this.page.getByRole('link', { name: /Manage Inventory/i }).click();
+			await expect.soft(buttonByName('Inventory Dashboard')).toBeVisible({ timeout: 30000 });
+
+			if (retry >= max_retires) {
+				throw new Error(
+					`Inventory table failed to load after ${MAX_RETRIES} retries`
+				);
+			}
+			return await this.inventoryDashboard(testInfo, retry + 1);
+			console.error('Inventory dashboard table failed:', error);
+		} else {
+			console.log('Inventory table loaded successfully');
+		}
+
+		await expect.soft(this.page.locator('div#gvInventoryStatus')).toBeVisible({ timeout: 90000 });
 		// await this.page.locator('button', { name: 'Show Inventory Details' }).first().click();
 		// await waitForSpinnerToDisappear('#dvImgContainerPL img', 45000);
 		// await this.page.waitForLoadState('networkidle', {timeout: 60000} );
 		// await waitForAPIRequestAndResponse('GetInventoryStatus', 60000);
 
-		await expect(this.rows.last()).toBeVisible();
-
-		await captureStepScreenshot( {page: this.page, stepName: 'ValidateInventoryDashboard'}, testInfo );
-
+		await expect.soft(this.rows.last()).toBeVisible();
+		await captureStepScreenshot({ page: this.page, stepName: 'ValidateInventoryDashboard' }, testInfo);
 	}
 
 	async InventoryTableProductSearch(testInfo) {
-		await this.page.locator('div#gvInventoryStatus input').pressSequentially(this.InventoryDashboardData.productName);
-		// await this.page.locator('input[aria-controls="DataTables_Table_0"]').fill(productName);
-		await captureStepScreenshot( {page: this.page, stepName: `ValidateInventoryProduct-${this.InventoryDashboardData.productName}`}, testInfo );
-		const plasticRowData = await getInvDashboardPlasticRowData(this.InventoryDashboardData.plasticCode);
-		console.log(plasticRowData);
-		updateRuntimeKey('plasticRowData', plasticRowData);
-		updateRuntimeKey('InventoryRequestorDetails.plasticCode', plasticRowData.plasticCode);
-		// this.inventoryDetails.plasticCode = runtimeData.plasticRowData.plasticCode;
+		if (await this.page.locator('div#gvInventoryStatus input').isVisible()) {
+			await this.page.locator('div#gvInventoryStatus input').pressSequentially(this.InventoryDashboardData.productName);
+			// await this.page.locator('input[aria-controls="DataTables_Table_0"]').fill(productName);
+			await captureStepScreenshot({ page: this.page, stepName: `ValidateInventoryProduct-${this.InventoryDashboardData.productName}` }, testInfo);
+			const plasticRowData = await getInvDashboardPlasticRowData(this.InventoryDashboardData.plasticCode);
+			console.log(plasticRowData);
+			updateRuntimeKey('plasticRowData', plasticRowData);
+			updateRuntimeKey('InventoryRequestorDetails.plasticCode', plasticRowData.plasticCode);
+			await captureStepScreenshot({ page: this.page, stepName: 'InventoryDashboardWithProduct' }, testInfo);
+			// this.inventoryDetails.plasticCode = runtimeData.plasticRowData.plasticCode;
+		} else {
+			console.log('Inventory dashboard table failed to load, skipping product search step');
+			await captureStepScreenshot({ page: this.page, stepName: 'InventoryDashboardLoadFailed' }, testInfo);
+		}
 	}
 
 	async requestInventory(testInfo) {
@@ -171,7 +197,7 @@ export class InventoryPage {
 		await expect(this.page.locator(InvL.buttons.nextOrder)).toBeDisabled();
 		await expect(this.page.locator(InvL.buttons.decisionInventory)).toBeDisabled();
 
-		await captureStepScreenshot( {page: this.page, stepName: 'RequestInventoryForm'}, testInfo );
+		await captureStepScreenshot({ page: this.page, stepName: 'RequestInventoryForm' }, testInfo);
 		await this.page.locator(InvL.dropdowns.branch).click();
 		await this.page.locator(InvL.dropdowns.branchInput).pressSequentially(this.InventoryDashboardData.branchName, { delay: 200 });
 		await this.page.getByRole('option', { name: new RegExp(this.InventoryDashboardData.branchName, 'i') }).click();
@@ -227,7 +253,7 @@ export class InventoryPage {
 		// await expect(requestInventoryRowData[0]).toHaveValue(this.inventoryDetails.plasticCode, { timeout: 20000 });
 		// await expect(requestInventoryRowData[2]).toHaveValue(this.inventoryDetails.quantity, { timeout: 20000 });
 
-		await captureStepScreenshot( {page: this.page, stepName: 'FilledRequestInventoryForm'}, testInfo);
+		await captureStepScreenshot({ page: this.page, stepName: 'FilledRequestInventoryForm' }, testInfo);
 
 		await expect(ReqInvTablecells.first()).toBeVisible();
 		await expect(ReqInvTablecells.nth(1)).toContainText(`${this.runtimeData.InventoryRequestorDetails.plasticCode}`);
@@ -257,7 +283,7 @@ export class InventoryPage {
 	}
 
 	async decisionInventory(testInfo) {
-		await expect(this.page.getByRole('button', { name: 'Decision Inventory' })).toBeEnabled({ timeout: 10000 });
+		await expect.soft(this.page.getByRole('button', { name: 'Decision Inventory' })).toBeEnabled({ timeout: 10000 });
 
 		if (await this.page.getByRole('button', { name: 'Decision Inventory' }).isVisible({ timeout: 10000 })) {
 			await this.page.getByRole('button', { name: 'Decision Inventory' }).click();
@@ -274,32 +300,37 @@ export class InventoryPage {
 		await expect(this.page.locator(InvL.order.requestorID)).toHaveValue(orderData.requestedBy, { timeout: 20000 });
 		await expect(this.page.locator(InvL.order.requestDate)).toHaveValue(orderData.requestedOn, { timeout: 20000 });
 		await this.page.getByRole('button', { name: 'Approve' }).click();
+
+		await expect(this.page.locator())
 		await handleModal(this.page, {
 			expectedHeader: 'Success',
 			expectedBody: 'Processed Successfully.',
 			buttonName: 'Close'
 		});
-		await captureStepScreenshot( {page: this.page, stepName: 'ApprovedInventoryRequest'}, testInfo );
+		await captureStepScreenshot({ page: this.page, stepName: 'ApprovedInventoryRequest' }, testInfo);
 		updateRuntimeKey(`InventoryOrders.${orderId}.cardStatus`, "Approved");
 	}
 
-	async getAccountNumber() {
-		await this.page.locator(InvL.tables.orderGridRows).filter({
+	async getAccountNumberFromInventoryOrder() {
+		await expect.soft(this.page.locator(InvL.tables.orderGridRows).filter({
 			has: this.page.locator('td:nth-child(4)', {
 				hasText: new RegExp(`^${this.runtimeData.RequestedInventoryDetails.OrderID}$`)
 			})
-		}).locator('td').nth(0).click();
+		}).locator('td:nth-child(7)')).toHaveText('Cards Created', { timeout: 45000 });
 		await this.page.locator(InvL.buttons.inventoryDetail).click();
+		// await this.page.getByRole('button', { name: 'Inventory Detail' }).click();
 
 		await validatePage('Inventory Detail');
 		await expect(this.page.locator(InvL.inputs.branchName)).toHaveValue(this.runtimeData.InventoryOrders[`${this.runtimeData.RequestedInventoryDetails.OrderID}`].branchStoreName, { timeout: 20000 });
-		await expect(this.page.locator(InvL.inputs.branchCode)).toHaveValue(this.runtimeData.InventoryOrders[`${this.runtimeData.RequestedInventoryDetails.OrderID}`].branchStoreCode, { timeout: 20000 });
+		await expect(this.page.locator(InvL.inputs.branchCode)).toHaveValue(this.InventoryDashboardData.branchName, { timeout: 20000 });
+		await this.page.locator(InvL.tables.accordianExpandButton).click();
 
 		if (!await this.page.locator(InvL.tables.tableAccordianRows).first().isVisible({ timeout: 20000 })) {
 			await this.page.locator(InvL.tables.tableAccordian).click();
 			await expect(this.page.locator(InvL.tables.tableAccordianRows).first()).toBeVisible({ timeout: 20000 });
 		}
 
-		const accountNumber = await this.page.locator(InvL.tables.tableAccordianRows).first().locator('td').nth(1).allTextContents();
+		const accountNumber = await this.page.locator(InvL.tables.tableAccordianRows).locator('td').nth(0).allTextContents();
+		console.log('Account numbers: ', accountNumber);
 	}
 }

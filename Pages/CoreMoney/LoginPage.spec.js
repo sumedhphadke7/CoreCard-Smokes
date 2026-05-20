@@ -9,7 +9,7 @@ export class LoginPage {
 		this.passwordField = this.page.locator('[name="password"]');
 		this.loginBtn = this.page.locator('.NewLoginBtn');
 		this.sessionError = this.page.locator('div.alert', { hasText: "Your session has expired. Please log in again!" });
-		this.credentials = testData.credentials;
+		this.credentials = testData.cm_credentials;
 	}
 
 	async navigatePage() {

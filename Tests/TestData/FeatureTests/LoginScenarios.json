@@ -1,7 +1,7 @@
 {
 	"validCredentials": {
 		"username": "sumedh.cc.admin",
-		"password": "Test123!"
+		"password": "Test12345!"
 	},
 	"invalidCredentials": {
 		"username": "invalid.user",

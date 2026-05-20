@@ -136,6 +136,50 @@ async function extractRowData(rowLocator, orderID) {
 	};
 }
 
+async function CIMenuNavigation(mainMenu, subMenuA = null, subMenuB = null, subMenuC = null) {
+
+	// Main navbar hover
+	await this.page
+		.getByText(mainMenu, { exact: true }).hover();
+
+	// Level 1
+	if (subMenuA) {
+		const menuA = this.page.getByText(subMenuA, { exact: true });
+		await expect(menuA).toBeVisible({ timeout: 10000 });
+
+		// If deeper menus exist → hover
+		if (subMenuB || subMenuC) {
+			await menuA.hover();
+		}
+		else {
+			await menuA.click();
+			return;
+		}
+	}
+
+	// Level 2
+	if (subMenuB) {
+		const menuB = this.page.getByText(subMenuB, { exact: true });
+		await expect(menuB).toBeVisible({ timeout: 10000 });
+
+		// If deeper menu exists → hover
+		if (subMenuC) {
+			await menuB.hover();
+		}
+		else {
+			await menuB.click();
+			return;
+		}
+	}
+
+	// Level 3
+	if (subMenuC) {
+		const menuC = this.page.getByText(subMenuC, { exact: true });
+		await expect(menuC).toBeVisible({ timeout: 10000 });
+		await menuC.click();
+	}
+}
+
 
 module.exports = {
 	setPage,
@@ -145,5 +189,6 @@ module.exports = {
 	waitForSpinnerToDisappear,
 	waitForAPIRequestAndResponse,
 	getInvDashboardPlasticRowData,
-	extractRowData
+	extractRowData,
+	CIMenuNavigation
 };

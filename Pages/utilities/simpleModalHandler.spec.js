@@ -28,6 +28,8 @@ async function handleModal(page, {
     console.log('Modal Body message:', await body.textContent());
     await expect(body).toContainText(expectedBody);
 
+    await captureStepScreenshot({ page: page, stepName: 'InventoryApprovedModal' }, testInfo);
+
     // Click footer button (avoid header X)
     await modal.getByRole('button', { name: new RegExp(`^${buttonName}$`, 'i') }).last().click();
 

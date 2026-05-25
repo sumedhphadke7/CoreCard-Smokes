@@ -1,14 +1,16 @@
 const { expect } = require('@playwright/test');
 import { captureStepScreenshot } from '../utilities/screenshotUtil.spec.js';
-const { CIMenuNavigation } = require('../utilities/GlobalFunctions.spec.js');
+const { CoreIssueMenuNavigation } = require('../utilities/GlobalFunctions.spec.js');
 
-export class CIIssueBatches {
+export class CoreIssue_IssueBatches {
     constructor(page) {
 		this.page = page;
 	}
 
     async forceCardEmbossing() {
-        await CIMenuNavigation('Administration', 'Card Issuing', 'Issue Batches');
+        await CoreIssueMenuNavigation(this.page, 'Administration', 'Card Issuing', 'Issue Batches');
+
+        await expect(this.page.getByRole('heading', { name: /^\s*Issue Batches\s*$/ })).toBeVisible({ timeout: 30000 });
         
     }
 }

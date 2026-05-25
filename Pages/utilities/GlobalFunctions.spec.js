@@ -136,15 +136,14 @@ async function extractRowData(rowLocator, orderID) {
 	};
 }
 
-async function CIMenuNavigation(mainMenu, subMenuA = null, subMenuB = null, subMenuC = null) {
+async function CoreIssueMenuNavigation(page, mainMenu, subMenuA = null, subMenuB = null, subMenuC = null) {
 
 	// Main navbar hover
-	await this.page
-		.getByText(mainMenu, { exact: true }).hover();
+	await page.getByText(mainMenu, { exact: true }).click();
 
 	// Level 1
 	if (subMenuA) {
-		const menuA = this.page.getByText(subMenuA, { exact: true });
+		const menuA = page.getByText(subMenuA, { exact: true });
 		await expect(menuA).toBeVisible({ timeout: 10000 });
 
 		// If deeper menus exist → hover
@@ -159,7 +158,7 @@ async function CIMenuNavigation(mainMenu, subMenuA = null, subMenuB = null, subM
 
 	// Level 2
 	if (subMenuB) {
-		const menuB = this.page.getByText(subMenuB, { exact: true });
+		const menuB = page.getByText(subMenuB, { exact: true });
 		await expect(menuB).toBeVisible({ timeout: 10000 });
 
 		// If deeper menu exists → hover
@@ -174,7 +173,7 @@ async function CIMenuNavigation(mainMenu, subMenuA = null, subMenuB = null, subM
 
 	// Level 3
 	if (subMenuC) {
-		const menuC = this.page.getByText(subMenuC, { exact: true });
+		const menuC = page.getByText(subMenuC, { exact: true }).first();
 		await expect(menuC).toBeVisible({ timeout: 10000 });
 		await menuC.click();
 	}
@@ -190,5 +189,5 @@ module.exports = {
 	waitForAPIRequestAndResponse,
 	getInvDashboardPlasticRowData,
 	extractRowData,
-	CIMenuNavigation
+	CoreIssueMenuNavigation
 };

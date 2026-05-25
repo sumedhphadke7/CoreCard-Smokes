@@ -8,6 +8,7 @@ import { initRuntimeData } from '../../Pages/utilities/runtimeDataManager.js';
 import { InventoryPage } from '../../Pages/CoreMoney/InventoryPagewithLocs.spec.js';
 // import { DecisionInventory } from '../Pages/DecisionInventory.spec';
 import { CoreIssue_HomePage } from '../../Pages/CoreIssue/CI_homePage.spec.js';
+import { CoreIssue_IssueBatches } from '../../Pages/CoreIssue/CI_issueBatches.js';
 
 test('CC100048_SmokeTest', async ({ context }, testInfo) => {
 	test.setTimeout(180000);
@@ -27,6 +28,7 @@ test('CC100048_SmokeTest', async ({ context }, testInfo) => {
 	const inventoryPage = new InventoryPage(mainPage, testInfo);
 
 	const CIHomePage = new CoreIssue_HomePage(secondPage);
+	const CIIssueBatches = new CoreIssue_IssueBatches(secondPage);
 	// const decisionInventory = new DecisionInventory(mainPage);
 
 	//User login block start
@@ -62,24 +64,25 @@ test('CC100048_SmokeTest', async ({ context }, testInfo) => {
 	await inventoryPage.searchInventorybyOrderID(testInfo);
 	await inventoryPage.decisionInventory(testInfo);
 	await sideButton('Home').click();
-	
+*/
 	await homePage.navToManageInventoryPage();
 	await inventoryPage.navToSearchInventory();
 	await inventoryPage.searchInventorybyOrderID(testInfo);
 	await inventoryPage.getAccountNumberFromInventoryOrder(testInfo);
-*/
+
 
 	/* CI verification steps to be written here */
 	await secondPage.bringToFront();
 	await CIHomePage.navToCILoginPage();
 	await CIHomePage.loginToCI(testInfo);
 	// await captureStepScreenshot({ page: secondPage, stepName: 'CILoginSuccess' }, testInfo);
+	await CIIssueBatches.forceCardEmbossing();
+	await mainPage.waitForTimeout(10000);
 	await CIHomePage.logoutCI(testInfo);
 
 	await secondPage.close();
 	await mainPage.bringToFront();
-	await mainPage.waitForTimeout(10000);
+	// await mainPage.waitForTimeout(10000);
 
 	/* */
-
 });

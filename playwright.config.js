@@ -22,6 +22,8 @@ export default defineConfig({
 		{
 			name: 'UI - Webkit',
 			testDir: './Tests',
+			testIgnore: '**/APITests/**',
+
 			use: {
 				...devices['Desktop Chrome'],
 				testDataDir: path.resolve(__dirname, 'Tests', 'TestData'),
@@ -36,6 +38,16 @@ export default defineConfig({
 				baseURL: 'https://testppwebapis.corecard.com',
 			},
 		},
+
+		// API tests in main tests folder
+		{
+			name: 'API Tests - Main Tests Folder',
+			testDir: './Tests/APITests',
+			use: {
+				baseURL: 'https://testppwebapis.corecard.com',
+			},
+		},
+
 	],
 	/* Run tests in files in parallel */
 	fullyParallel: true,
@@ -60,7 +72,7 @@ export default defineConfig({
 		use: {
 			actionTimeout: 120000,   // timeout for actions like click/fill
 			navigationTimeout: 300000, // timeout for page.goto(), waitForLoadState
-			headless: true
+			// headless: true
 		},
 	},
 

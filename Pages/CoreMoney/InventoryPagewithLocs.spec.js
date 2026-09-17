@@ -301,7 +301,7 @@ export class InventoryPage {
 		await expect(this.page.locator(InvL.order.requestDate)).toHaveValue(orderData.requestedOn, { timeout: 20000 });
 		await this.page.getByRole('button', { name: 'Approve' }).click();
 
-		await expect(this.page.locator())
+		// await expect(this.page.locator())
 		await handleModal(this.page, {
 			expectedHeader: 'Success',
 			expectedBody: 'Processed Successfully.',
